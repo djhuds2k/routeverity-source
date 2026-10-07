@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --rv-ink: #17211d;
+  --rv-paper: #f4f1ea;
+  --rv-muted: #59625e;
+  --rv-signal: #d94f32;
+  --rv-action: #b93f27;
+  --rv-border: #dce0dd;
+  --rv-background: #ffffff;
+  --rv-success: #16794b;
+  --rv-warning: #8a5700;
+  --rv-danger: #b42318;
+  --rv-inverse: #c6cec9;
+  --rv-radius: 0.75rem;
+  --rv-gap: 1.25rem;
+  --rv-shadow: 0 1px 3px #17211d0d;
+  --rv-heading: 1.125rem;
+}
+
+@layer base {
+  body {
+    @apply text-sm antialiased;
+    color: var(--rv-ink);
+    background: var(--rv-paper);
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-semibold tracking-tight;
+  }
+  h1 {
+    font-size: var(--rv-heading);
+  }
+  a,
+  button,
+  input,
+  select,
+  textarea {
+    @apply focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4;
+    outline-color: var(--rv-action);
+  }
+  input,
+  select,
+  textarea {
+    @apply w-full rounded-lg border px-3 py-2.5 text-sm;
+    border-color: var(--rv-border);
+    background: var(--rv-background);
+  }
+  label {
+    @apply block text-sm font-medium;
+  }
+  label > input,
+  label > select,
+  label > textarea {
+    @apply mt-2;
+  }
+  th {
+    @apply text-left text-xs font-medium uppercase tracking-wider;
+    color: var(--rv-muted);
+  }
+  th,
+  td {
+    @apply border-b px-4 py-3;
+    border-color: var(--rv-border);
+  }
+}
+
+@layer components {
+  .rv-button {
+    @apply inline-flex min-h-10 items-center justify-center rounded-lg border px-4 py-2 text-sm font-medium;
+    background: var(--rv-action);
+    color: white;
+    border-color: var(--rv-action);
+  }
+  .rv-button:hover {
+    background: #96321f;
+  }
+  .rv-button:disabled {
+    @apply cursor-not-allowed opacity-50;
+  }
+  .rv-secondary {
+    background: white;
+    color: var(--rv-ink);
+    border-color: var(--rv-border);
+  }
+  .rv-secondary:hover {
+    background: var(--rv-paper);
+  }
+  .rv-card {
+    @apply border bg-white p-6;
+    border-color: var(--rv-border);
+    border-radius: var(--rv-radius);
+    box-shadow: var(--rv-shadow);
+  }
+  .rv-muted {
+    color: var(--rv-muted);
+  }
+  .rv-grid {
+    background-image: linear-gradient(#17211d08 1px, transparent 1px),
+      linear-gradient(90deg, #17211d08 1px, transparent 1px);
+    background-size: 44px 44px;
+  }
+  .rv-page {
+    @apply mx-auto max-w-screen-xl px-3 py-6 sm:px-6;
+  }
+  .rv-stack {
+    @apply flex flex-col;
+    gap: var(--rv-gap);
+  }
+}

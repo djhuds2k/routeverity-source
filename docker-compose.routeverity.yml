@@ -1,0 +1,100 @@
+name: routeverity-baseline
+
+services:
+  mysql:
+    image: mysql:8.0.46@sha256:7dcddc01f13bab2f15cde676d44d01f61fc9f99fe7785e86196dfc07d358ae2b
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: routeverity
+      MYSQL_USER: routeverity
+      MYSQL_PASSWORD: ${ROUTEVERITY_MYSQL_PASSWORD:?Run the local setup command first}
+      MYSQL_ROOT_PASSWORD: ${ROUTEVERITY_MYSQL_ROOT_PASSWORD:?Run the local setup command first}
+    command: ["--default-authentication-plugin=mysql_native_password"]
+    ports:
+      - "127.0.0.1:13306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - 'MYSQL_PWD="$${MYSQL_PASSWORD}" mysql --protocol=TCP -h 127.0.0.1 -u "$${MYSQL_USER}" "$${MYSQL_DATABASE}" --batch --skip-column-names -e "SELECT 1" | grep -qx 1'
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+    networks: [baseline]
+
+  planetscale-proxy:
+    image: ghcr.io/mattrobenolt/ps-http-sim@sha256:fb624c2f615cd53910be07a5c6a62ddf54936a2e1c7322c8398fa2b5dd601c41
+    restart: unless-stopped
+    command:
+      - "-listen-addr=0.0.0.0"
+      - "-listen-port=3900"
+      - "-mysql-addr=mysql"
+      - "-mysql-port=3306"
+      - "-mysql-dbname=routeverity"
+      - "-log-level=warn"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:13900:3900"
+    networks: [baseline]
+
+  redis:
+    # Redis 7.2.4 is BSD-3-Clause, before the later licensing changes.
+    image: redis:7.2.4-alpine@sha256:c8bb255c3559b3e458766db810aa7b3c7af1235b204cfdb304e79ff388fe1a5a
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks: [baseline]
+
+  redis-rest:
+    image: hiett/serverless-redis-http@sha256:5b0bb9239fce53abf87b2018a7a0deb9ec7bd900c5360738fe5fbeeb426f9150
+    restart: unless-stopped
+    environment:
+      SRH_MODE: env
+      SRH_TOKEN: ${UPSTASH_REDIS_REST_TOKEN:?Run the local setup command first}
+      SRH_CONNECTION_STRING: redis://redis:6379
+    depends_on:
+      redis:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:18079:80"
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - 'wget -qO- --header="Authorization: Bearer $${SRH_TOKEN}" --header="Content-Type: application/json" --post-data=''["PING"]'' http://127.0.0.1:80 | grep -q PONG'
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks: [baseline]
+
+  mailhog:
+    image: mailhog/mailhog:v1.0.1@sha256:8d76a3d4ffa32a3661311944007a415332c4bb855657f4f6c57996405c009bea
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:11025:1025"
+      - "127.0.0.1:18025:8025"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:8025/api/v2/messages"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks: [baseline]
+
+volumes:
+  mysql-data:
+    name: routeverity-baseline-mysql-data
+  redis-data:
+    name: routeverity-baseline-redis-data
+
+networks:
+  baseline:
+    name: routeverity-baseline-network

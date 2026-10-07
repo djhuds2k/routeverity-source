@@ -1,0 +1,79 @@
+enum RouteVerityCampaignStatus {
+  DRAFT
+  ACTIVE
+  SUSPENDED
+  ARCHIVED
+}
+
+enum RouteVerityTrafficSource {
+  GOOGLE_ADS
+  MICROSOFT_ADS
+  META_ADS
+  TIKTOK_ADS
+  OTHER
+}
+
+model RouteVerityCampaign {
+  id                 String                    @id
+  projectId          String
+  name               String                    @db.VarChar(120)
+  advertiser         String                    @db.VarChar(120)
+  trafficSource      RouteVerityTrafficSource   @default(GOOGLE_ADS)
+  externalCampaignId String?                   @db.VarChar(200)
+  currency           String                    @default("GBP") @db.VarChar(3)
+  status             RouteVerityCampaignStatus  @default(DRAFT)
+  trackingDomainId   String?
+  trackingParameters Json
+  notes              String?                   @db.Text
+  createdAt          DateTime                  @default(now())
+  updatedAt          DateTime                  @updatedAt
+  trackingTokenHash  String?                   @db.Char(64)
+  trackingTokenIssuedAt DateTime?
+
+  project             Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  trackingDomain      Domain? @relation(fields: [trackingDomainId], references: [id], onDelete: SetNull)
+  destinationDomains  RouteVerityDestinationDomain[]
+
+  @@index([projectId, createdAt])
+  @@index(trackingDomainId)
+}
+
+model RouteVerityRedirectAudit {
+  clickId                  String   @id @db.VarChar(64)
+  requestId                String   @unique @db.VarChar(64)
+  timestamp                DateTime @default(now())
+  projectId                String
+  campaignId               String
+  trackingDomain           String   @db.VarChar(253)
+  destinationHostname      String   @db.VarChar(253)
+  providedNextHopHash      String   @db.Char(64)
+  validatedNextHopHash     String   @db.Char(64)
+  actualRedirectTargetHash String   @db.Char(64)
+  validationResult         String   @db.VarChar(32)
+  redirectStatus           Int
+  processingTimeMs         Float
+  policyVersion            String   @db.VarChar(160)
+  appVersion               String   @db.VarChar(80)
+  analyticsCaptured        Boolean  @default(false)
+  rawUserAgent             String?  @db.VarChar(512)
+  referrerHostname         String?  @db.VarChar(253)
+  device                   String?  @db.VarChar(80)
+  browser                  String?  @db.VarChar(80)
+  operatingSystem          String?  @db.VarChar(80)
+  enrichedAt               DateTime?
+  googleAds                Json?
+
+  @@index([projectId, campaignId, timestamp])
+  @@index([projectId, timestamp, clickId])
+  @@index([analyticsCaptured, enrichedAt, timestamp])
+}
+
+model RouteVerityDestinationDomain {
+  id                String @id @default(cuid())
+  campaignId        String
+  hostname          String @db.VarChar(253)
+  includeSubdomains Boolean @default(false)
+  campaign          RouteVerityCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+
+  @@unique([campaignId, hostname])
+}

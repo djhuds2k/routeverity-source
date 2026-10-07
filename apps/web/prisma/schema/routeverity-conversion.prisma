@@ -1,0 +1,57 @@
+model RouteVerityConversionKey {
+  id          String   @id
+  projectId   String
+  name        String   @db.VarChar(60)
+  tokenHash   String   @unique @db.Char(64)
+  createdAt   DateTime @default(now())
+  revokedAt   DateTime?
+
+  @@index([projectId, revokedAt])
+}
+
+model RouteVerityConversionGoal {
+  id         String   @id
+  projectId  String
+  campaignId String
+  event      String   @db.VarChar(64)
+  name       String   @db.VarChar(120)
+  currency   String   @db.VarChar(3)
+  enabled    Boolean  @default(true)
+  createdAt  DateTime @default(now())
+
+  @@unique([projectId, campaignId, event])
+  @@index([projectId, enabled])
+}
+
+model RouteVerityConversion {
+  id                String   @id
+  projectId         String
+  campaignId        String
+  goalId            String
+  clickId           String   @db.VarChar(64)
+  event             String   @db.VarChar(64)
+  orderId           String   @db.VarChar(120)
+  orderHash         String   @db.Char(64)
+  customerReference String?  @db.VarChar(120)
+  revenue           Decimal  @db.Decimal(18, 3)
+  currency          String   @db.VarChar(3)
+  occurredAt        DateTime
+  receivedAt        DateTime @default(now())
+  metadata          Json
+  payloadHash       String   @db.Char(64)
+  attributionPolicy String   @db.VarChar(40)
+
+  @@unique([projectId, goalId, orderHash])
+  @@index([projectId, occurredAt, id])
+  @@index([projectId, clickId])
+}
+
+model RouteVerityConversionReceipt {
+  id           String @id
+  projectId    String
+  keyHash      String @db.Char(64)
+  conversionId String
+  payloadHash  String @db.Char(64)
+
+  @@unique([projectId, keyHash])
+}

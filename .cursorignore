@@ -1,0 +1,13 @@
+# local env files
+.env*.local
+.env
+
+# tinybird
+.venv
+.tinyb
+
+# RouteVerity licensing quarantine. See docs/licensing-exclusions.json.
+apps/web/app/(ee)/**
+apps/web/app/app.dub.co/(dashboard)/\[slug\]/(ee)/**
+packages/stripe-app/**
+packages/ui/src/icons/nucleo/**

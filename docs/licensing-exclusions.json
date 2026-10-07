@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "inspectedAt": "2026-10-06",
+  "upstreamRepository": "https://github.com/dubinc/dub",
+  "upstreamCommit": "3cc0c50e39b7ee35ebddf9c9a030293130da9af9",
+  "defaultLicense": "AGPL-3.0",
+  "policy": "Do not read implementation, import, compile, adapt, publish, or deploy excluded content. License documents and tracked path metadata may be inspected.",
+  "exclusions": [
+    {
+      "path": "apps/web/app/(ee)",
+      "trackedFiles": 694,
+      "reason": "Dub Commercial License",
+      "licenseEvidence": "apps/web/app/(ee)/LICENSE.md",
+      "status": "EE_DO_NOT_USE"
+    },
+    {
+      "path": "apps/web/app/app.dub.co/(dashboard)/[slug]/(ee)",
+      "trackedFiles": 304,
+      "reason": "Root license names this tree; nested license refers to the first EE license",
+      "licenseEvidence": "LICENSE.md",
+      "status": "EE_DO_NOT_USE"
+    },
+    {
+      "path": "packages/stripe-app",
+      "trackedFiles": 18,
+      "reason": "Package declares ~~proprietary~~, conflicting with the root default; permission is unresolved",
+      "licenseEvidence": "packages/stripe-app/package.json",
+      "status": "QUARANTINED_PENDING_PERMISSION"
+    },
+    {
+      "path": "packages/ui/src/icons/nucleo",
+      "trackedFiles": 261,
+      "reason": "Bundled notice prohibits redistribution and restricts use to the product with which the icons are bundled",
+      "licenseEvidence": "packages/ui/src/icons/nucleo/README.md",
+      "status": "QUARANTINED_PENDING_PERMISSION_OR_REPLACEMENT"
+    }
+  ],
+  "gitSparseCheckoutPatterns": [
+    "/*",
+    "!/apps/web/app/(ee)/",
+    "!/apps/web/app/app.dub.co/(dashboard)/\\[slug\\]/(ee)/",
+    "!/packages/stripe-app/",
+    "!/packages/ui/src/icons/nucleo/"
+  ],
+  "remoteAssetReferencesRequiringRemovalOrPermission": [],
+  "resolvedRemoteAssetReferences": [
+    "packages/email/src/templates/partner-program-summary.tsx",
+    "packages/email/src/templates/program-payout-reminder.tsx"
+  ]
+}
