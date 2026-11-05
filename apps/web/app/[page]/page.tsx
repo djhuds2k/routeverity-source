@@ -1,3 +1,5 @@
+import { brand } from "@/lib/routeverity/brand";
+import { publicMetadata } from "@/lib/routeverity/public-metadata";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -6,16 +8,24 @@ const pages: Record<
   { title: string; lead: string; sections: { title: string; text: string }[] }
 > = {
   features: {
-    title: "A clear foundation for advertising measurement",
-    lead: "RouteVerity is being developed in focused milestones. We distinguish available functionality from planned capabilities.",
+    title: "Campaigns, clicks and server conversions",
+    lead: "Explore the implemented preproduction product. Hosted operation and a real merchant deployment remain in review.",
     sections: [
       {
-        title: "Available today",
-        text: "Verified email sign-in, workspaces, campaigns and destination policies, credential-bound transparent redirects, integrity audits, click reporting with asynchronous device enrichment and CSV export, direct click-attributed server conversions, currency-separated revenue, standard links, domain ownership verification and workspace settings.",
+        title: "Campaigns and transparent redirects",
+        text: "Create campaigns, approve destination hostnames and issue revocable tracking credentials. Transparent redirects validate the visible next hop and record durable evidence before returning the response. Standard links and DNS ownership checks are also implemented.",
       },
       {
-        title: "Planned",
-        text: "Browser conversion SDK, raw advertising identifier retention, Google conversion uploads, unique-visitor/country measurement and webhooks are not enabled. Billing remains deferred.",
+        title: "Reports and conversion events",
+        text: "Inspect retained click evidence, derived device/browser/OS dimensions and CSV exports. Authenticated server conversion events support exact revenue separated by currency. Reports measure prepared redirects and customer-reported conversions, not verified visits, people or payments.",
+      },
+      {
+        title: "Merchant integration and workspace controls",
+        text: "A consent-gated merchant endpoint supports limited matching against recorded GCLID hashes, separate unmatched outcomes and bounded reconciliation. Merchants must integrate their own consent, session/order storage and durable retries. Verified email access, workspace roles, retention settings, export/deletion and configured operator controls are implemented.",
+      },
+      {
+        title: "Evaluation scope",
+        text: "The browser conversion SDK, Google conversion uploads, unique-visitor/country measurement, outgoing webhooks and paid billing are not enabled. DNS/TLS provisioning, production supervision, recovery and hosted merchant acceptance remain launch work. Google certification has not been submitted.",
       },
     ],
   },
@@ -33,17 +43,17 @@ const pages: Record<
       },
       {
         title: "Parallel tracking and attribution",
-        text: "Google parallel tracking sends visitors directly to the ad final URL while measurement runs separately. RouteVerity's response-header click ID does not automatically reach the merchant. No browser SDK, Google conversion upload or automatic merchant correlation is provided. GCLID, GBRAID and WBRAID are retained only as SHA-256 fingerprints, not recoverable identifiers.",
+        text: "Google parallel tracking sends visitors directly to the ad final URL while measurement runs separately. RouteVerity's response-header click ID does not automatically reach the merchant. The implemented merchant endpoint can match a consented GCLID hash only when a single eligible retained request exists. Repeated identifiers can be ambiguous; they are not treated as unique Google clicks. Merchants must supply their own consent and order/session integration. This contract has local acceptance, not hosted or live Google acceptance. Advertising identifiers are retained as SHA-256 fingerprints, not recoverable values. No browser SDK or Google conversion upload is provided.",
       },
     ],
   },
   pricing: {
-    title: "Start with the free working baseline",
-    lead: "Evaluate the foundation without a paid subscription.",
+    title: "Evaluate the preproduction app",
+    lead: "The current evaluation build does not collect subscription payments. Commercial plans and launch availability are not announced.",
     sections: [
       {
-        title: "Free development plan",
-        text: "Up to 25 links and 3 custom domains per workspace. Local development domains do not count toward the custom-domain limit.",
+        title: "Current evaluation limits",
+        text: "The default workspace configuration allows up to 25 standard links and 3 custom domains. Local development domains do not count toward the custom-domain limit. These evaluation limits are not a commercial service or availability commitment.",
       },
       {
         title: "Paid plans are deferred",
@@ -56,7 +66,7 @@ const pages: Record<
     lead: "Transparency starts with being precise about what our product does.",
     sections: [
       {
-        title: "No fabricated measurement",
+        title: "Measurement scope",
         text: "Transparent redirects create durable integrity records before returning HTTP 302. Reporting counts prepared redirects, not confirmed landing-page visits or unique people. Device/browser/OS metadata is asynchronously derived from the supplied user agent and can be absent or inaccurate. Conversion events and revenue are reported by authenticated customer servers, not independently verified payments. Direct attribution uses the owned click ID and a 30-day occurrence-time window, with immutable events and currency-separated totals.",
       },
       {
@@ -73,7 +83,7 @@ const pages: Record<
       },
       {
         title: "Retention and abuse reporting",
-        text: "This remains a preproduction baseline. Filtered click CSV export is available to workspace members; comprehensive personal-data export, automatic expiry and organisation-deletion workflows are not implemented. Evidence survives campaign deletion. Raw user-agent strings remain pending while the enrichment worker is stopped; run it regularly and establish retention procedures before hosting. Report suspected abuse to abuse@routeverity.com; the product does not claim a deployed abuse inbox or automated malware screening.",
+        text: "This remains a preproduction baseline. Owners select 30, 60 or 90 days of detailed click/conversion retention; 90 days is the default and maximum. Click evidence expires from creation, conversions and retry receipts from conversion receipt. Evidence survives campaign deletion only until its retention deadline. A separate cleanup worker erases pending raw user agents at 24 hours and operator suspension audits after 365 days; hosted scheduling and failure alerts are not configured yet. Successful enrichment clears raw input sooner; late enrichment uses unknown dimensions. Cleanup permanently changes historical reports and exports, and removes expired retry/deduplication evidence. Owners can erase workspace data through account controls; account deletion requires no owned workspaces, revokes live sessions and preserves other members' workspaces/links. Operator incident history remains for its separate retention. Filtered click CSV, owner-only retained-workspace JSON and personal-account JSON exports are available. JSON downloads exclude credential fields and raw UA, and reject collection/byte overflow rather than truncating data. Larger export fulfilment and legal rights-request handling remain release work. See Privacy and retention for the draft policy and release limits. Contact contact@routeverity.com for suspected abuse. Automated malware screening is not provided.",
       },
       {
         title: "Open-source foundation",
@@ -81,13 +91,43 @@ const pages: Record<
       },
       {
         title: "Corresponding source",
-        text: "The free corresponding-source download in every page's footer is pinned to this version's release tag, including the permitted source, dependency lockfile, schema, tests and build/run instructions. This is a preproduction baseline, not a claim of live hosting, Google certification or operational readiness.",
+        text: "The footer links to a historical preproduction source archive. It is not represented as matching the current evaluation build. A reviewed matching corresponding-source release and notices are required before any public launch. This evaluation does not claim live hosting, Google certification or operational readiness.",
+      },
+    ],
+  },
+  privacy: {
+    title: "Privacy and retention",
+    lead: "Preproduction privacy notice: implementation facts, not a claim of GDPR compliance or a final legal policy.",
+    sections: [
+      {
+        title: "Operator and enquiries",
+        text: `${brand.name} is operated by ${brand.legalName} Contact ${brand.contactEmail} for privacy requests, support or abuse reports. This identifies the operator and enquiry channel; the policy remains a preproduction draft pending legal review.`,
+      },
+      {
+        title: "Merchant submissions",
+        text: "The merchant endpoint requires an explicit granted measurement-consent assertion before retaining minimal order/event, currency, amount and occurrence data with a supplied GCLID hash. Missing or ambiguous evidence is reported separately from attributed revenue. Pending no-match submissions can be reconciled for 24 hours from first receipt; retries do not extend that deadline. Hashes are cleared at attributed or terminal outcomes, subject to worker operation and retention cleanup. The assertion is not independent proof of valid consent.",
+      },
+      {
+        title: "Account and tracking data",
+        text: "Dashboard accounts use email addresses, workspace membership and database-backed sessions. Click records contain random identifiers, timestamps, hostnames, integrity fingerprints and bounded coarse metadata. No IP address, persistent visitor identifier or visitor cookie is stored in click/conversion records. Optional advertising identifiers are hash-only, not guaranteed anonymous. Customer-submitted order IDs, opaque references and scalar metadata can still be personal data; do not submit sensitive personal data or secrets.",
+      },
+      {
+        title: "Retention and expiry",
+        text: "Detailed click/redirect records are retained for 90 days by default, with owner settings of 30 or 60 days available. Conversion events and retry receipts use the same setting measured from conversion receipt, not occurrence date. Operator suspension/resumption audits have a separate 365-day limit. Raw user-agent strings are cleared after successful enrichment or become eligible for erasure at 24 hours. Late enrichment uses unknown dimensions. A separate cleanup worker performs erasure; hosting, supervision and expiry-failure alerts remain release gates. A stopped cleanup worker cannot guarantee physical deletion deadlines. Increasing retention cannot restore deleted records.",
+      },
+      {
+        title: "Authentication cookies and infrastructure",
+        text: "Dashboard authentication uses essential session and request-verification cookies. The transparent click endpoint does not add visitor-tracking cookies. Hosting, email, database and rate-limiter providers may process network addresses and operational logs separately; application-level collection limits do not prove those providers collect nothing. The final list of hosting, database, rate-limiter and email providers will be published after the hosting arrangement is confirmed. Provider agreements, regions, log retention and transfer safeguards remain under review.",
+      },
+      {
+        title: "Rights, export and release limits",
+        text: "Authenticated workspace members can export filtered click CSV data. Owner-only workspace JSON contains retained active-product configuration, memberships by random user ID, clicks and conversions; personal-account JSON contains your own profile, memberships and non-secret session/provider metadata. JSON exports exclude credential fields, raw UA and operator incident history, and are limited to 10,000 rows per collection and 20 MiB total with explicit errors and no partial file. They are not database backups or complete legal subject-access responses; customer notes/URLs/metadata may contain sensitive text. Owners can permanently erase workspace operational data with exact address confirmation; operator incident audits retain random scalar IDs and reasons for their separate 365-day policy. Account deletion requires no owned workspaces and exact email confirmation, removes live sessions/login tokens and memberships, and clears author IDs while preserving links in others' workspaces. Suspended owned workspaces still block account deletion but can be exported or erased through account controls. Live database erasure cannot remove previously downloaded exports or instantly erase provider backups, logs or external DNS/hosting; restoration needs reapplication of expiry rules. Registered business details, lawful bases, customer processing agreements, larger-export fulfilment and backup/log retention must be finalized before accepting customers. Contact contact@routeverity.com for privacy, support or abuse enquiries.",
       },
     ],
   },
   security: {
-    title: "Trust through clear boundaries",
-    lead: "Security controls should be explicit, not implied by a badge.",
+    title: "Access controls and release readiness",
+    lead: "Review the controls implemented in the evaluation build. Production security and operational acceptance remain separate launch gates.",
     sections: [
       {
         title: "Account and workspace access",
@@ -113,7 +153,32 @@ const pages: Record<
       },
     ],
   },
+  contact: {
+    title: "Contact RouteVerity",
+    lead: `Operated by ${brand.legalName}`,
+    sections: [
+      {
+        title: "Support, privacy and abuse",
+        text: `Use ${brand.contactEmail} for product support, privacy enquiries and suspected abuse. Include relevant workspace or campaign references when needed; do not email passwords, session links, tracking credentials or unnecessary personal data.`,
+      },
+      {
+        title: "Evaluation status",
+        text: "RouteVerity remains in preproduction. Hosted availability, commercial plans, support response commitments and final legal policies have not been announced.",
+      },
+    ],
+  },
 };
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ page: string }>;
+}) {
+  const { page } = await params;
+  const content = pages[page];
+  if (!content) notFound();
+  return publicMetadata(`/${page}`, content.title, content.lead);
+}
 
 export function generateStaticParams() {
   return Object.keys(pages).map((page) => ({ page }));
@@ -164,9 +229,15 @@ export default async function PublicPage({
             </a>
           </section>
         )}
-        <Link href="/signup" className="rv-button w-fit">
-          Get Started
-        </Link>
+        {page === "contact" ? (
+          <a href={`mailto:${brand.contactEmail}`} className="rv-button w-fit">
+            Email RouteVerity
+          </a>
+        ) : (
+          <Link href="/signup" className="rv-button w-fit">
+            Evaluate the app
+          </Link>
+        )}
       </div>
     </main>
   );

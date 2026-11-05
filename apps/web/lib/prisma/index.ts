@@ -1,3 +1,4 @@
+// Modified for RouteVerity, 2026-10-06 through 2026-10-17. See root NOTICE.md.
 import { PrismaClient } from "@prisma/client";
 import { databaseOptions } from "./options";
 

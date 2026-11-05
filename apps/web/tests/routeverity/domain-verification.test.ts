@@ -164,9 +164,26 @@ describe("manual domain verification", () => {
       (await changeDomain("team", "dom_test", "verify", {})).error,
     ).toContain("domain changed");
   });
+  it.each(["ECONNREFUSED", "ESERVFAIL", "EREFUSED", "EAI_AGAIN"])(
+    "preserves verified and unverified ownership on resolver failure %s",
+    async (code) => {
+      mocks.dns.mockRejectedValue(
+        Object.assign(new Error("Resolver unavailable"), { code }),
+      );
+      for (const verified of [false, true]) {
+        mocks.domain.mockResolvedValue({ ...domain, verified });
+        expect(
+          (await changeDomain("team", "dom_test", "verify", {})).error,
+        ).toBe(
+          "DNS verification is temporarily unavailable. No ownership status was changed; retry the check.",
+        );
+        expect(mocks.update).not.toHaveBeenCalled();
+      }
+    },
+  );
   it("surfaces unexpected DNS failures without changing ownership", async () => {
     const error = Object.assign(new Error("Resolver failed"), {
-      code: "ESERVFAIL",
+      code: "EBADRESP",
     });
     mocks.dns.mockRejectedValue(error);
     const log = vi.spyOn(console, "error").mockImplementation(() => {});
@@ -174,7 +191,13 @@ describe("manual domain verification", () => {
       expect(
         (await changeDomain("team", "dom_test", "verify", {})).error,
       ).toContain("request failed");
-      expect(log).toHaveBeenCalledWith("RouteVerity mutation failed", error);
+      expect(log).toHaveBeenCalledTimes(1);
+      expect(JSON.parse(String(log.mock.calls[0][0]))).toEqual({
+        event: "routeverity.mutation.failed",
+        error_type: "Error",
+        incident_id: expect.stringMatching(/^[a-f0-9-]{36}$/),
+      });
+      expect(JSON.stringify(log.mock.calls)).not.toContain("Resolver failed");
       expect(mocks.update).not.toHaveBeenCalled();
     } finally {
       log.mockRestore();

@@ -117,9 +117,16 @@ redirect being sent; never equate audit rows with completed visits.
 
 SHA-256 is not encryption or guaranteed anonymisation. Low-entropy targets can
 be guessed, and the records can still constitute personal data. Campaign
-deletion retains minimal audit evidence; automatic expiry, organisation deletion
-and comprehensive data export need explicit implementation before public hosting.
+deletion retains minimal audit evidence only until its workspace retention
+deadline (default/maximum 90 days; owners can select 30 or 60). The independent
+cleanup worker performs expiry and raw-UA erasure; its hosted supervision and
+alerts and larger-export/rights-request fulfilment still need completion before public
+hosting. Owner-confirmed workspace erasure is available through `/account`;
+durable audit inserts lock the workspace to avoid recreating deleted evidence.
 Filtered click CSV export is available; it is not a full GDPR export workflow.
+Owner workspace JSON exports provide retained active-product evidence without
+raw UA or credentials; they are bounded downloads, not automatic legal
+subject-access fulfilment.
 
 Campaign pages provide a tenant-scoped, read-only view of the latest 50 records.
 The runtime guard logs a critical incident and rejects any target mismatch.

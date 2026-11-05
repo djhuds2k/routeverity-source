@@ -1,5 +1,41 @@
 # Google Ads setup and transparent request contract
 
+## November2026 certification preparation — E187
+
+Status: **IN_PROGRESS** for preparation; submission **NOT_STARTED** and product
+certification **NOT_SUBMITTED**. Google's current [certification guidelines](https://support.google.com/google-ads/answer/13707399?hl=en)
+state an annual1September–30November application window, supporting30November2026
+as this year's closing date. Submission is not approval or a promised processing
+deadline. The [official application](https://support.google.com/google-ads/contact/3pcertification_transparent_click_trackers)
+was inspected read-only; nothing was sent.
+
+Draft form evidence: company **Multitouch Displays Ltd.**, product **RouteVerity**,
+corporate support/privacy/abuse email **contact@routeverity.com** (owner confirmed).
+Known registered office:20-22Wenlock Road, London N1 7GU, United Kingdom,
+company09722659. Confirm the appropriate business address and named certification
+contact before submission. Mailbox delivery, public privacy/GDPR policy, active
+advertiser/customer status and domain registration/ownership evidence are not
+verified; do not answer the form's attestations on assumptions.
+
+| Submission evidence | Status / remaining acceptance |
+| --- | --- |
+| Public HTTPS tracker and supported domain | **BLOCKED**: publicclick host returns Vercel403 from audit environment; root TLS succeeds, but no working public tracker/hosted acceptance established |
+| Visible next hop | **IMPLEMENTED_UNVERIFIED** for Google's environment: url parameter selects the validated exact Location; local redirect/integrity cases pass, actual hosted chain and all used paths still require verification |
+| Parameters | **IMPLEMENTED_UNVERIFIED** externally: declare url, rv_campaign, rv_token and supported optional campaignid/adgroupid/creative/matchtype/device/network/gclid/gbraid/wbraid. No parameter may secretly override/inject into next hop; foreign merchant fields must already be inside url |
+| Ads macros / parallel tracking | **NOT_STARTED** live: real Google Ads Test with the saved generated template; Search/other intended campaign types, URL encoding, final suffix, overrides and actual background request must be evidenced |
+| Public identity/privacy/abuse | **IMPLEMENTED_UNVERIFIED**: local pages/contact text present; approved policies, publicly accessible pages, working mailbox and abuse response ownership remain gates |
+| Customer-style working example | **NOT_STARTED**: approved isolated campaign, supported domain, merchant HTTPS final URL and revocable test credential; verify actual request and Location without disclosing credentials in public reports |
+| Reliability / evidence | **BLOCKED**: worker supervision, outage detection/delivered alerts, off-site backup retrieval, measured isolated restore/rollback, latency/error evidence and production secrets acceptance incomplete |
+| Application fields and ownership | **IN_PROGRESS**: named contact/business-address confirmation, public website/privacy URLs, advertiser status, domains/full working example, transparency parameter and domain ownership proof remain |
+
+Prepare a private evidence bundle with timestamped hosted request/Location,
+Google Ads Test result and macro expansion, public policy/contact screenshots,
+domain ownership proof, operating/recovery results, accepted source archive/hash
+and parameter declaration. Redact campaign credentials from screenshots/reports;
+provide Google's necessary working example only through the approved submission.
+Do not claim certification or send the form before explicit submission approval.
+Stripe, partners and cosmetic work do not block this preparation.
+
 Milestone 6 adds independently developed, locally testable Google Ads templates,
 bounded ValueTrack reception and a campaign setup/validation tool.
 Certification remains **NOT_SUBMITTED**. There is no live Google Ads account
@@ -136,8 +172,13 @@ merchant page. `X-RouteVerity-Click-Id` belongs to the measurement response and
 does **not** automatically reach the merchant server. The independently verified
 local product E2E test captures that header as an owned server integration,
 then submits a conversion. It is **not** proof of automatic live Google-to-
-merchant attribution. A future explicit correlation design is needed; do not
-inject IDs into the transparent next hop to disguise this limitation.
+merchant attribution. The new [merchant attribution design](merchant-attribution-design.md)
+and [integration notes](merchant-integration.md) describe an internal consent-gated
+GCLID-hash candidate resolver and independent local merchant HTTP fixture. Its
+limited recorded-request matching is locally verified, but is not a public
+integration or guaranteed unique Google click attribution. Google documents that
+repeated clicks can share a GCLID. Do not inject IDs into the transparent next
+hop to disguise this limitation.
 
 Public ingress must redact bearer tracking URLs and raw advertising parameters.
 Platform/proxy logs are outside application logging and can otherwise retain

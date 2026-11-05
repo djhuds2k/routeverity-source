@@ -33,6 +33,15 @@ function run(command, args, label, timeout = 30_000) {
 }
 
 function ensureIgnored() {
+  let ancestor = root;
+  while (!existsSync(resolve(ancestor, ".git")) && dirname(ancestor) !== ancestor)
+    ancestor = dirname(ancestor);
+  if (!existsSync(resolve(ancestor, ".git"))) {
+    const patterns = readFileSync(resolve(root, ".gitignore"), "utf8").split(/\r?\n/);
+    if (!patterns.includes(".env*.local"))
+      throw new Error("Source archive is missing the required local-environment ignore rule.");
+    return;
+  }
   run("git", ["check-ignore", "--quiet", "apps/web/.env.local"], "Environment ignore check");
   const tracked = run("git", ["ls-files", "--", "apps/web/.env.local"], "Environment tracking check");
   if (tracked) throw new Error("Refusing to use a tracked local environment file.");

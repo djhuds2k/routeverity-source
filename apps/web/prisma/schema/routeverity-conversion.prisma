@@ -44,6 +44,7 @@ model RouteVerityConversion {
   @@unique([projectId, goalId, orderHash])
   @@index([projectId, occurredAt, id])
   @@index([projectId, clickId])
+  @@index([projectId, receivedAt, id])
 }
 
 model RouteVerityConversionReceipt {
@@ -54,4 +55,51 @@ model RouteVerityConversionReceipt {
   payloadHash  String @db.Char(64)
 
   @@unique([projectId, keyHash])
+  @@index([projectId, conversionId])
+}
+
+enum RouteVerityMerchantStatus {
+  PENDING
+  ATTRIBUTED
+  UNATTRIBUTED
+}
+
+model RouteVerityMerchantSubmission {
+  id              String @id
+  projectId       String
+  campaignId      String
+  goalId          String
+  credentialId    String
+  event           String @db.VarChar(64)
+  orderId         String @db.VarChar(120)
+  orderHash       String @db.Char(64)
+  revenue         Decimal @db.Decimal(18, 3)
+  currency        String @db.VarChar(3)
+  occurredAt      DateTime
+  receivedAt      DateTime @default(now())
+  gclidHash       String? @db.Char(64)
+  payloadHash     String @db.Char(64)
+  status          RouteVerityMerchantStatus
+  reason          String @db.VarChar(40)
+  conversionId    String?
+  reconcileUntil  DateTime
+  nextAttemptAt   DateTime
+  attempts        Int @default(0)
+
+  @@unique([projectId, goalId, orderHash])
+  @@index([projectId, occurredAt, id])
+  @@index([projectId, receivedAt, id])
+  @@index([receivedAt, id])
+  @@index([status, nextAttemptAt, id])
+}
+
+model RouteVerityMerchantReceipt {
+  id           String @id
+  projectId    String
+  keyHash      String @db.Char(64)
+  submissionId String
+  payloadHash  String @db.Char(64)
+
+  @@unique([projectId, keyHash])
+  @@index([projectId, submissionId])
 }

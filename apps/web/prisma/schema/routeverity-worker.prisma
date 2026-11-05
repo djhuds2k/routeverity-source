@@ -1,0 +1,23 @@
+enum RouteVerityWorkerName {
+  ENRICHMENT
+  RETENTION
+  INTEGRITY
+  MERCHANT_RECONCILIATION
+}
+
+enum RouteVerityWorkerState {
+  RUNNING
+  SUCCEEDED
+  FAILED
+}
+
+model RouteVerityWorkerHealth {
+  name            RouteVerityWorkerName  @id
+  runId           String
+  state           RouteVerityWorkerState
+  startedAt       DateTime
+  progressAt      DateTime
+  succeededAt     DateTime?
+  failedAt        DateTime?
+  failureCode     String?               @db.VarChar(40)
+}

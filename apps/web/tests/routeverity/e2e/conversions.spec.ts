@@ -4,12 +4,18 @@ import {
   googleAdsPreviewValues,
 } from "@/lib/routeverity/google-ads-policy";
 import {
+  captureMerchantGclid,
+  resolveMerchantCandidate,
+} from "@/lib/routeverity/merchant-attribution";
+import {
   fingerprint,
   issueTrackingToken,
 } from "@/lib/routeverity/transparent-policy";
 import { expect, test, type APIRequestContext } from "@playwright/test";
 import { Prisma, PrismaClient } from "@prisma/client";
 import { randomUUID } from "node:crypto";
+import { once } from "node:events";
+import { createServer } from "node:http";
 import { assertLocalDatabase, signInWithEmail } from "./helpers";
 
 const prisma = new PrismaClient();
@@ -207,6 +213,155 @@ test("Google-style UI template -> exact redirect -> real analytics -> attributed
     page.getByRole("alert").filter({ hasText: "not approved" }),
   ).toBeVisible();
   await expect(templateField).toHaveCount(0);
+});
+
+test("independent merchant landing -> shared hash candidate -> conversion without tracker header access", async ({
+  request,
+}) => {
+  const gclid = `merchant_fixture_${randomUUID()}`;
+  const landing = new URL(destination);
+  landing.searchParams.set("gclid", gclid);
+  const merchant = createServer((req, res) => {
+    const observed = new URL(req.url ?? "/", "http://127.0.0.1");
+    res.writeHead(200, {
+      "content-type": "application/json",
+      "cache-control": "no-store",
+    });
+    res.end(JSON.stringify(captureMerchantGclid(observed.search, "granted")));
+  });
+  merchant.listen(0, "127.0.0.1");
+  await once(merchant, "listening");
+  try {
+    const address = merchant.address();
+    expect(address && typeof address === "object").toBeTruthy();
+    if (!address || typeof address === "string")
+      throw new Error("Merchant fixture did not bind a local TCP port");
+    const merchantResponse = await request.get(
+      `http://127.0.0.1:${address.port}${landing.pathname}${landing.search}`,
+    );
+    expect(merchantResponse.status()).toBe(200);
+    const captured: unknown = await merchantResponse.json();
+    expect(captured).toEqual({
+      status: "READY",
+      gclidHash: fingerprint(gclid),
+    });
+    if (
+      !captured ||
+      typeof captured !== "object" ||
+      !("gclidHash" in captured) ||
+      typeof captured.gclidHash !== "string"
+    )
+      throw new Error("Merchant fixture did not return valid capture evidence");
+    const gclidHash = captured.gclidHash;
+    const resolveAt = (occurredAt: Date) =>
+      resolveMerchantCandidate({
+        projectId,
+        campaignId,
+        gclidHash,
+        occurredAt,
+      });
+    const beforeTracking = new Date();
+    expect(await resolveAt(beforeTracking)).toEqual({
+      status: "NO_RECORDED_MATCH",
+    });
+
+    const trackingQuery = new URLSearchParams({
+      url: destination,
+      rv_campaign: campaignId,
+      rv_token: tracking.token,
+      gclid,
+    });
+    const background = await request.get(`/click?${trackingQuery}`, {
+      headers: { Host: host },
+      maxRedirects: 0,
+    });
+    expect(background.status()).toBe(302);
+    expect(background.headers().location).toBe(destination);
+    const occurredAt = new Date();
+    const candidate = await resolveAt(occurredAt);
+    expect(candidate.status).toBe("MATCHED_RECORDED_REQUEST");
+    if (candidate.status !== "MATCHED_RECORDED_REQUEST")
+      throw new Error(
+        `Merchant fixture could not resolve: ${candidate.status}`,
+      );
+    const audit = await prisma.routeVerityRedirectAudit.findUniqueOrThrow({
+      where: { clickId: candidate.clickId },
+    });
+    expect(audit.googleAds).toEqual({ gclidHash });
+    expect(JSON.stringify(audit)).not.toContain(gclid);
+    await expect(
+      resolveMerchantCandidate({
+        projectId: `${projectId}-other`,
+        campaignId,
+        gclidHash,
+        occurredAt,
+      }),
+    ).rejects.toMatchObject({ code: "WORKSPACE_UNAVAILABLE" });
+    expect(
+      await resolveMerchantCandidate({
+        projectId,
+        campaignId: `${campaignId}-other`,
+        gclidHash,
+        occurredAt,
+      }),
+    ).toEqual({ status: "NO_RECORDED_MATCH" });
+    expect(await resolveAt(new Date(audit.timestamp.getTime() - 1))).toEqual({
+      status: "NO_RECORDED_MATCH",
+    });
+    const payload = {
+      ...purchase(),
+      click_id: candidate.clickId,
+      revenue: "23.45",
+      timestamp: occurredAt.toISOString(),
+    };
+    const idempotency = randomUUID();
+    const accepted = await post(request, payload, idempotency);
+    expect(accepted.status()).toBe(201);
+    const retry = await post(request, payload, idempotency);
+    expect(retry.status()).toBe(200);
+    expect((await accepted.json()).conversion_id).toBe(
+      (await retry.json()).conversion_id,
+    );
+    const stored = await prisma.routeVerityConversion.findMany({
+      where: { projectId, campaignId, clickId: candidate.clickId },
+    });
+    expect(stored).toHaveLength(1);
+    expect(stored[0].revenue.toFixed(3)).toBe("23.450");
+    expect(stored[0].orderId).toBe(payload.order_id);
+
+    const boundary = new Date(occurredAt.getTime() - 30 * 86400000);
+    await prisma.routeVerityRedirectAudit.update({
+      where: { clickId: candidate.clickId },
+      data: { timestamp: boundary },
+    });
+    expect((await resolveAt(occurredAt)).status).toBe(
+      "MATCHED_RECORDED_REQUEST",
+    );
+    await prisma.routeVerityRedirectAudit.update({
+      where: { clickId: candidate.clickId },
+      data: { timestamp: new Date(boundary.getTime() - 1) },
+    });
+    expect(await resolveAt(occurredAt)).toEqual({
+      status: "NO_RECORDED_MATCH",
+    });
+    await prisma.routeVerityRedirectAudit.update({
+      where: { clickId: candidate.clickId },
+      data: { timestamp: audit.timestamp },
+    });
+
+    const repeated = await request.get(`/click?${trackingQuery}`, {
+      headers: { Host: host },
+      maxRedirects: 0,
+    });
+    expect(repeated.status()).toBe(302);
+    expect(await resolveAt(new Date())).toEqual({
+      status: "AMBIGUOUS_IDENTIFIER",
+    });
+  } finally {
+    await new Promise<void>((resolve, reject) => {
+      merchant.close((error) => (error ? reject(error) : resolve()));
+    });
+  }
 });
 test.beforeEach(async () => {
   await cleanConversions();

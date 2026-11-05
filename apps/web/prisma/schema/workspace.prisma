@@ -1,3 +1,4 @@
+// Modified for RouteVerity, 2026-10-06 through 2026-10-17. See root NOTICE.md.
 enum PlanPeriod {
   monthly
   yearly
@@ -100,6 +101,7 @@ model Project {
   utmTemplates          UtmTemplate[]
   yearInReviews         YearInReview[]
   routeverityCampaigns  RouteVerityCampaign[]
+  routeverityRetentionDays Int @default(90)
 
   @@index(usageLastChecked(sort: Asc))
   @@index(trialEndsAt)

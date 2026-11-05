@@ -1,0 +1,18 @@
+enum RouteVerityOperatorOperation {
+  WORKSPACE_SUSPENDED
+  WORKSPACE_RESUMED
+}
+
+model RouteVerityOperatorEvent {
+  id          String                         @id
+  projectId   String
+  actorId     String
+  operation   RouteVerityOperatorOperation
+  reason      String                         @db.VarChar(500)
+  wasDisabled Boolean
+  isDisabled  Boolean
+  createdAt   DateTime                       @default(now())
+
+  @@index([projectId, createdAt, id])
+  @@index([createdAt, id])
+}

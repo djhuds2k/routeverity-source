@@ -1,0 +1,9 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "nextjs",
+  "installCommand": "pnpm --filter dub-monorepo --filter web... install --frozen-lockfile --ignore-scripts",
+  "buildCommand": "pnpm --workspace-root routeverity:build",
+  "git": {
+    "deploymentEnabled": false
+  }
+}

@@ -52,7 +52,7 @@ test("verified account -> workspace -> standard link -> domains -> settings -> l
   await expect(page).toHaveURL(new RegExp(`/app/${slug}$`));
   await expect(
     page.getByRole("link", {
-      name: "Free corresponding source (AGPL)",
+      name: "Historical source archive (AGPL)",
       exact: true,
     }),
   ).toHaveAttribute(
@@ -118,7 +118,13 @@ test("verified account -> workspace -> standard link -> domains -> settings -> l
     .filter({ has: page.getByRole("heading", { name: domain, exact: true }) });
   await expect(card).toContainText("Pending verification");
   await card.getByRole("button", { name: "Check DNS" }).click();
-  await expect(card.getByRole("alert")).toContainText("TXT record not found");
+  await expect(card.getByRole("alert")).toContainText(
+    /TXT record not found|DNS verification (?:timed out|is temporarily unavailable)/,
+  );
+  await expect(card).toContainText("Pending verification");
+  expect(
+    (await prisma.domain.findUnique({ where: { slug: domain } }))?.verified,
+  ).toBe(false);
   await card.getByRole("button", { name: "Remove domain" }).click();
   await expect(card).toHaveCount(0);
   await page.getByLabel("Hostname").fill(`tracking-${domain}`);
@@ -212,7 +218,7 @@ test("public and authentication layouts fit mobile; audited logo renders", async
   await page.goto("/login");
   await expect(
     page.getByRole("link", {
-      name: "Free corresponding source (AGPL)",
+      name: "Historical source archive (AGPL)",
       exact: true,
     }),
   ).toHaveAttribute(
@@ -234,7 +240,7 @@ test("public and authentication layouts fit mobile; audited logo renders", async
   await page.goto("/");
   await expect(
     page.getByRole("link", {
-      name: "Free corresponding source (AGPL)",
+      name: "Historical source archive (AGPL)",
       exact: true,
     }),
   ).toBeVisible();

@@ -2,7 +2,7 @@
 
 import { createId } from "@/lib/api/create-id";
 import { prisma } from "@/lib/prisma";
-import type { Domain, Prisma } from "@prisma/client";
+import { Prisma, type Domain } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { randomBytes } from "node:crypto";
 import { Resolver } from "node:dns/promises";
@@ -254,6 +254,16 @@ export async function changeDomain(
           throw new ActionError(
             "DNS verification timed out. No ownership status was changed; retry the check.",
           );
+        if (
+          error instanceof Error &&
+          "code" in error &&
+          ["ECONNREFUSED", "ESERVFAIL", "EREFUSED", "EAI_AGAIN"].includes(
+            String(error.code),
+          )
+        )
+          throw new ActionError(
+            "DNS verification is temporarily unavailable. No ownership status was changed; retry the check.",
+          );
         throw error;
       }
       const verified = Boolean(
@@ -295,12 +305,23 @@ export async function createLink(
     const input = linkSchema.safeParse(Object.fromEntries(form));
     if (!input.success) throw new ActionError(input.error.issues[0].message);
     await prisma.$transaction(async (tx) => {
+      const authors = await tx.$queryRaw<{ id: string }[]>(
+        Prisma.sql`SELECT id FROM User WHERE id = ${userId} FOR UPDATE`,
+      );
+      if (!authors.length)
+        throw new ActionError("Your account is unavailable.");
       const current = await tx.project.update({
         where: { id: workspace.id },
         data: { totalLinks: { increment: 1 } },
       });
       if (current.totalLinks > current.linksLimit)
         throw new ActionError("The free plan link limit has been reached.");
+      const member = await tx.projectUsers.findFirst({
+        where: { userId, projectId: workspace.id },
+        select: { role: true },
+      });
+      if (current.disabledAt || !member || !canWrite(member.role))
+        throw new ActionError("You no longer have permission to create links.");
       // Lock before reading so a concurrent suspension cannot leave stale state.
       await tx.domain.updateMany({
         where: { id: input.data.domainId, projectId: workspace.id },

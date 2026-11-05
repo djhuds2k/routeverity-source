@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 import { randomUUID } from "node:crypto";
 import {
   campaignReadiness,
@@ -121,7 +122,19 @@ export async function transparentRedirect(request: Request) {
       appVersion: redirectAppVersion,
     };
     await withinDeadline(
-      prisma.routeVerityRedirectAudit.create({ data: audit }),
+      prisma.$transaction(
+        async (tx) => {
+          // Deletion must not race a late durable insert into scalar-ID evidence.
+          const workspaces = await tx.$queryRaw<{ id: string }[]>(Prisma.sql`
+            SELECT id FROM Project
+            WHERE id = ${campaign.projectId} AND disabledAt IS NULL FOR UPDATE
+          `);
+          if (!workspaces.length)
+            throw new TrackingError(404, "CAMPAIGN_UNAVAILABLE");
+          await tx.routeVerityRedirectAudit.create({ data: audit });
+        },
+        { maxWait: 1000, timeout: 1500 },
+      ),
       1500,
     );
     response.headers.set(

@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { createWorkspace } from "@/lib/routeverity/actions";
 import { requireUser } from "@/lib/routeverity/auth";
 import { brand } from "@/lib/routeverity/brand";
+import { isOperator } from "@/lib/routeverity/operators";
 import { ActionForm } from "@/ui/routeverity/action-form";
 import { SignOut } from "@/ui/routeverity/sign-out";
 import Image from "next/image";
@@ -11,6 +12,7 @@ export const dynamic = "force-dynamic";
 
 export default async function Workspaces() {
   const user = await requireUser();
+  const operator = await isOperator(user.id);
   const memberships = await prisma.projectUsers.findMany({
     where: { userId: user.id, project: { disabledAt: null } },
     include: { project: true },
@@ -32,6 +34,14 @@ export default async function Workspaces() {
       <div>
         <h1>Your workspaces</h1>
         <p className="rv-muted mt-2">{user.email}</p>
+        <Link href="/account" className="underline">
+          Account and deletion
+        </Link>
+        {operator && (
+          <Link href="/operations" className="underline">
+            Operator controls
+          </Link>
+        )}
       </div>
       {memberships.map(({ project }) => (
         <Link

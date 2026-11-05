@@ -1,3 +1,4 @@
+// Modified for RouteVerity, 2026-10-06 through 2026-10-17. See root NOTICE.md.
 import { currencyFormatter, DUB_WORDMARK, pluralize } from "@dub/utils";
 import {
   Body,

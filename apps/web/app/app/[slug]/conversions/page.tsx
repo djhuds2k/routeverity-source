@@ -11,6 +11,7 @@ import {
 import {
   conversionQuery,
   loadConversionReport,
+  loadMerchantReport,
   parseConversionFilters,
 } from "@/lib/routeverity/conversion-reporting";
 import { canWrite } from "@/lib/routeverity/validation";
@@ -42,7 +43,7 @@ export default async function Conversions({
       </main>
     );
   }
-  const [report, goals, campaigns, keys] = await Promise.all([
+  const [report, goals, campaigns, keys, merchantReport] = await Promise.all([
     loadConversionReport(workspace.id, filters),
     prisma.routeVerityConversionGoal.findMany({
       where: { projectId: workspace.id },
@@ -59,6 +60,7 @@ export default async function Conversions({
           select: { id: true, name: true, createdAt: true },
         })
       : [],
+    loadMerchantReport(workspace.id, filters),
   ]);
   const names = new Map(
     campaigns.map((campaign) => [campaign.id, campaign.name]),
@@ -69,10 +71,14 @@ export default async function Conversions({
     <main className="rv-page rv-stack">
       <h1>Conversions</h1>
       <p className="rv-muted">
-        Immutable server-reported events attributed directly to an owned click
-        ID within 30 days of that click, using the event occurrence time.
-        Monetary totals stay separated by currency. No inferred visitor matching
-        or currency conversion.
+        Immutable server-reported events linked to recorded requests within 30
+        days, using the event occurrence time. Direct click IDs and limited
+        merchant GCLID recorded-request matches are distinguished by their
+        attribution policy. Neither proves a human visit or payment. Monetary
+        totals stay separated by currency. No inferred visitor matching or
+        currency conversion. Records expire from receipt time under workspace
+        retention; reports use occurrence dates and contain retained events
+        only.
       </p>
       <form
         method="get"
@@ -114,13 +120,13 @@ export default async function Conversions({
       </form>
       <div className="grid gap-5 sm:grid-cols-2">
         <section className="rv-card">
-          <h2>Conversions in range</h2>
+          <h2>Attributed conversions in range</h2>
           <p className="mt-3 text-3xl" data-testid="conversion-total">
             {report.total}
           </p>
         </section>
         <section className="rv-card">
-          <h2>Revenue by currency</h2>
+          <h2>Attributed revenue by currency</h2>
           {report.revenue.length ? (
             report.revenue.map((row) => (
               <p
@@ -136,6 +142,75 @@ export default async function Conversions({
           )}
         </section>
       </div>
+      <section className="rv-card rv-stack">
+        <h2>Pending and unattributed merchant submissions</h2>
+        <p className="rv-muted">
+          These merchant-reported amounts are excluded from attributed totals.
+          No confirmed landing or unique Google interaction is inferred. Only
+          missing recorded evidence with a valid identifier is retried, for up
+          to 24 hours from first receipt. Missing or ambiguous identifiers are
+          not guessed.
+        </p>
+        <p data-testid="merchant-unmatched-total">{merchantReport.total}</p>
+        {merchantReport.groups.map((row) => (
+          <p
+            key={`${row.status}-${row.currency}`}
+            data-testid={`merchant-${row.status}-${row.currency}`}
+          >
+            {row.status}: {row._count._all} / {row.currency}{" "}
+            {row._sum.revenue?.toFixed(3) ?? "0.000"}
+          </p>
+        ))}
+        {merchantReport.rows.length > 0 && (
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr>
+                  <th>Occurred (UTC)</th>
+                  <th>Order</th>
+                  <th>Status</th>
+                  <th>Reason</th>
+                  <th>Reported amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                {merchantReport.rows.map((row) => (
+                  <tr key={row.id}>
+                    <td>{row.occurredAt.toISOString()}</td>
+                    <td className="break-all">{row.orderId}</td>
+                    <td>{row.status}</td>
+                    <td>{row.reason}</td>
+                    <td>
+                      {row.currency} {row.revenue.toFixed(3)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+        <nav
+          aria-label="Unmatched merchant submissions pagination"
+          className="flex gap-4"
+        >
+          {filters.pageNumber > 1 && (
+            <Link
+              className="underline"
+              href={`?${conversionQuery(filters, filters.pageNumber - 1)}`}
+            >
+              Previous unmatched page
+            </Link>
+          )}
+          {filters.pageNumber * 50 < merchantReport.total && (
+            <Link
+              className="underline"
+              href={`?${conversionQuery(filters, filters.pageNumber + 1)}`}
+            >
+              Next unmatched page
+            </Link>
+          )}
+        </nav>
+      </section>
       {!report.total ? (
         <section className="rv-card">
           <h2>No conversions in this range</h2>

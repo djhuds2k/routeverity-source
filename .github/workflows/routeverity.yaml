@@ -1,0 +1,90 @@
+name: RouteVerity CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: routeverity-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  product:
+    name: Product checks
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      CI: "true"
+      NODE_OPTIONS: "--max-old-space-size=6144"
+      DOTENV_FLOW_SILENT: "true"
+      ROUTEVERITY_OPERATOR_EMAIL: operator-e2e@routeverity.test
+    steps:
+      - name: Check out permitted source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/apps/web/app/(ee)/
+            !/apps/web/app/app.dub.co/(dashboard)/\[slug\]/(ee)/
+            !/packages/stripe-app/
+            !/packages/ui/src/icons/nucleo/
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+        with:
+          version: 9.15.9
+          run_install: false
+          cache: false
+
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+          package-manager-cache: false
+
+      - name: Restore product dependencies
+        run: pnpm --filter dub-monorepo --filter web... install --frozen-lockfile --ignore-scripts
+
+      - name: Check licensing boundary
+        run: pnpm routeverity:licenses
+
+      - name: Lint product
+        run: pnpm routeverity:lint
+
+      - name: Start isolated local services
+        id: services
+        run: node scripts/local-routeverity.mjs start
+
+      - name: Build production app and shared packages
+        run: pnpm routeverity:build
+
+      - name: Check types
+        run: pnpm routeverity:typecheck
+
+      - name: Run unit and contract tests
+        run: pnpm routeverity:test
+
+      - name: Prepare fresh runner database
+        run: pnpm --filter web prisma:push
+
+      - name: Install Chromium and system dependencies
+        run: pnpm --filter web exec playwright install --with-deps chromium
+
+      - name: Run complete browser and HTTP acceptance
+        env:
+          ROUTEVERITY_E2E_START_SERVER: "1"
+        run: pnpm routeverity:e2e
+
+      - name: Reject skipped or incomplete acceptance
+        run: pnpm routeverity:e2e:check
+
+      - name: Stop owned local services
+        if: ${{ always() && steps.services.outcome != 'skipped' }}
+        run: node scripts/local-routeverity.mjs stop

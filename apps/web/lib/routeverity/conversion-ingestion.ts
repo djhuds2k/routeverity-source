@@ -6,47 +6,11 @@ import {
   ConversionError,
   idempotencyHash,
   parseConversionPayload,
-  parseUniqueJson,
   validateConversionTime,
 } from "./conversion-policy";
+import { readConversionJson } from "./conversion-request";
 import { allowRequest } from "./rate-limit";
 import { fingerprint, hasRedirectIntegrity } from "./transparent-policy";
-
-async function readJson(request: Request) {
-  if (
-    request.headers.get("content-type")?.split(";")[0].trim().toLowerCase() !==
-    "application/json"
-  )
-    throw new ConversionError(415, "JSON_CONTENT_TYPE_REQUIRED");
-  const reader = request.body?.getReader();
-  if (!reader) throw new ConversionError(400, "MISSING_BODY");
-  let bytes = 0;
-  const chunks: Uint8Array[] = [];
-  try {
-    let chunk = await reader.read();
-    while (!chunk.done) {
-      const { value } = chunk;
-      bytes += value.byteLength;
-      if (bytes > 16384) {
-        await reader.cancel();
-        throw new ConversionError(413, "CONVERSION_BODY_TOO_LARGE");
-      }
-      chunks.push(value);
-      chunk = await reader.read();
-    }
-    try {
-      return parseUniqueJson(
-        new TextDecoder("utf-8", { fatal: true }).decode(Buffer.concat(chunks)),
-      );
-    } catch (error) {
-      if (!(error instanceof SyntaxError || error instanceof TypeError))
-        throw error;
-      throw new ConversionError(400, "INVALID_JSON");
-    }
-  } finally {
-    reader.releaseLock();
-  }
-}
 
 function readPostback(request: Request) {
   const search = new URL(request.url).search;
@@ -113,7 +77,7 @@ export async function conversionIngestion(request: Request) {
     if (request.method === "POST") {
       if (new URL(request.url).search)
         throw new ConversionError(400, "POST_QUERY_NOT_SUPPORTED");
-      input = await readJson(request);
+      input = await readConversionJson(request);
       idempotencyKey = request.headers.get("idempotency-key");
     } else {
       const postback = readPostback(request);
@@ -198,6 +162,19 @@ export async function conversionIngestion(request: Request) {
           return { id: existing.id, duplicate: true };
         }
         if (!goal.enabled) throw new ConversionError(403, "GOAL_DISABLED");
+        if (
+          await tx.routeVerityMerchantSubmission.findUnique({
+            where: {
+              projectId_goalId_orderHash: {
+                projectId: key.projectId,
+                goalId: goal.id,
+                orderHash: fingerprint(payload.order_id),
+              },
+            },
+            select: { id: true },
+          })
+        )
+          throw new ConversionError(409, "MERCHANT_ORDER_RESERVED");
         const now = new Date();
         const occurredAt = payload.timestamp
           ? new Date(payload.timestamp)

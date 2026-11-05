@@ -3,17 +3,22 @@
   "private": true,
   "license": "AGPL-3.0-or-later",
   "scripts": {
-    "routeverity:build": "pnpm --filter @dub/ui... build && pnpm --filter web build",
+    "routeverity:build": "node scripts/check-routeverity-vendor-patch.mjs && pnpm --filter @dub/ui... build && pnpm --filter web build",
+    "routeverity:vendor-check": "node scripts/check-routeverity-vendor-patch.mjs",
     "routeverity:typecheck": "pnpm --filter web typecheck",
     "routeverity:lint": "pnpm --filter web lint:routeverity",
-    "routeverity:test": "pnpm --filter web test:routeverity && node --test packages/ui/tests/icon-migration.test.cjs",
+    "routeverity:test": "pnpm --filter web test:routeverity && node --test packages/ui/tests/icon-migration.test.cjs scripts/routeverity-build-inventory.test.cjs scripts/routeverity-native-licenses.test.cjs scripts/routeverity-notice-fetch.test.mjs examples/merchant-reference/client.test.mjs scripts/check-routeverity-e2e.test.mjs scripts/routeverity-vendor-security.test.cjs scripts/routeverity-shell-quote.test.cjs",
     "routeverity:e2e": "pnpm --filter web test:e2e:routeverity",
+    "routeverity:e2e:check": "node scripts/check-routeverity-e2e.mjs apps/web/test-results/routeverity-results.json",
     "routeverity:dev": "pnpm --filter web dev:routeverity",
     "routeverity:start": "pnpm --filter web start:routeverity",
     "routeverity:local": "node scripts/local-routeverity.mjs",
     "routeverity:licenses": "node scripts/check-routeverity-boundary.mjs",
     "routeverity:redirect-audit": "pnpm --filter web audit:redirects",
     "routeverity:enrich-clicks": "pnpm --filter web enrich:clicks",
+    "routeverity:retain-data": "pnpm --filter web retain:data",
+    "routeverity:health": "pnpm --filter web health:routeverity",
+    "routeverity:reconcile-merchants": "pnpm --filter web reconcile:merchant",
     "build": "turbo build",
     "build:packages": "pnpm -r --filter \"./packages/**\" build",
     "dev": "turbo dev",
@@ -44,6 +49,41 @@
   },
   "resolutions": {
     "chrono-node": "2.7.5"
+  },
+  "pnpm": {
+    "packageExtensions": {
+      "next@15.5.28": {
+        "dependencies": {
+          "cookie": "0.7.2",
+          "picomatch": "4.0.4",
+          "send": "0.19.0",
+          "ws": "8.21.0",
+          "@babel/core": "7.29.6"
+        }
+      }
+    },
+    "patchedDependencies": {
+      "next@15.5.28": "patches/next@15.5.28.patch"
+    },
+    "overrides": {
+      "next>sharp": "0.35.5",
+      "next-auth>nodemailer": "10.3.0",
+      "@types/react": "19.1.14",
+      "@types/react-dom": "19.1.9",
+      "zod@>=4.0.0 <5.0.0": "4.6.7",
+      "nanoid@>=3.0.0 <4.0.0": "3.3.18",
+      "nanoid@>=5.0.0 <6.0.0": "5.1.16",
+      "@babel/runtime@>=7.0.0 <7.26.10": "7.26.10",
+      "base-x@>=5.0.0 <5.0.1": "5.0.1",
+      "mdast-util-to-hast@>=13.0.0 <13.2.1": "13.2.1",
+      "js-cookie@>=3.0.0 <3.0.7": "3.0.7",
+      "@tiptap/core@>=3.0.0 <3.30.5": "3.30.5",
+      "@tiptap/pm@>=3.0.0 <3.30.5": "3.30.5",
+      "prosemirror-view@>=1.0.0 <1.42.3": "1.42.3",
+      "follow-redirects@>=1.0.0 <1.16.2": "1.16.2",
+      "concurrently>shell-quote": "1.11.0",
+      "vitest>happy-dom": "-"
+    }
   },
   "packageManager": "pnpm@9.15.9"
 }

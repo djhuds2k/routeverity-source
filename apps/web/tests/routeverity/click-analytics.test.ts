@@ -77,7 +77,7 @@ describe("async enrichment", () => {
   });
   it("conditionally enriches pending events once and erases raw UA", async () => {
     mocks.find.mockResolvedValue([
-      { clickId: "rvc_test", rawUserAgent: agent },
+      { clickId: "rvc_test", rawUserAgent: agent, timestamp: new Date() },
     ]);
     mocks.update
       .mockResolvedValueOnce({ count: 1 })
@@ -96,10 +96,33 @@ describe("async enrichment", () => {
   });
   it("does not swallow database failures or mark lost work complete", async () => {
     mocks.find.mockResolvedValue([
-      { clickId: "rvc_test", rawUserAgent: agent },
+      { clickId: "rvc_test", rawUserAgent: agent, timestamp: new Date() },
     ]);
     mocks.update.mockRejectedValue(new Error("offline"));
     await expect(enrichClickBatch()).rejects.toThrow("offline");
+  });
+  it("does not parse expired raw input, even if the retention worker was stopped", async () => {
+    mocks.find.mockResolvedValue([
+      {
+        clickId: "rvc_expired",
+        rawUserAgent: agent,
+        timestamp: new Date(Date.now() - 24 * 3_600_000),
+      },
+    ]);
+    mocks.update.mockResolvedValue({ count: 1 });
+    await enrichClickBatch();
+    expect(mocks.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({ rawUserAgent: agent }),
+        data: {
+          rawUserAgent: null,
+          device: "Unknown",
+          browser: "Unknown",
+          operatingSystem: "Unknown",
+          enrichedAt: expect.any(Date),
+        },
+      }),
+    );
   });
   it.each([0, -1, 501, 1.5])(
     "rejects invalid batch sizes %s",

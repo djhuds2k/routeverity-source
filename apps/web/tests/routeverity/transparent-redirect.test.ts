@@ -9,11 +9,14 @@ const mocks = vi.hoisted(() => ({
   find: vi.fn(),
   audit: vi.fn(),
   allow: vi.fn(),
+  lock: vi.fn(),
+  transaction: vi.fn(),
 }));
 vi.mock("@/lib/prisma", () => ({
   prisma: {
     routeVerityCampaign: { findUnique: mocks.find },
     routeVerityRedirectAudit: { create: mocks.audit },
+    $transaction: mocks.transaction,
   },
 }));
 vi.mock("@/lib/routeverity/rate-limit", () => ({ allowRequest: mocks.allow }));
@@ -70,6 +73,13 @@ beforeEach(() => {
   mocks.find.mockResolvedValue(structuredClone(campaign));
   mocks.allow.mockResolvedValue(true);
   mocks.audit.mockResolvedValue({});
+  mocks.lock.mockResolvedValue([{ id: "ws_test" }]);
+  mocks.transaction.mockImplementation((operation) =>
+    operation({
+      $queryRaw: mocks.lock,
+      routeVerityRedirectAudit: { create: mocks.audit },
+    }),
+  );
   vi.spyOn(console, "info").mockImplementation(() => {});
   vi.spyOn(console, "warn").mockImplementation(() => {});
   vi.spyOn(console, "error").mockImplementation(() => {});
@@ -81,6 +91,14 @@ afterEach(() => {
 });
 
 describe("transparent redirect service", () => {
+  it("rejects a workspace deleted or suspended after lookup without recreating audit evidence", async () => {
+    mocks.lock.mockResolvedValue([]);
+    const response = await transparentRedirect(request());
+    expect(response.status).toBe(404);
+    expect(response.headers.get("location")).toBeNull();
+    expect(response.headers.get("x-routeverity-click-id")).toBeNull();
+    expect(mocks.audit).not.toHaveBeenCalled();
+  });
   it("persists bounded Google metadata in the same core insert, never raw IDs or a modified target", async () => {
     const original = request();
     const response = await transparentRedirect(

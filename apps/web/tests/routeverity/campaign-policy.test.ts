@@ -83,6 +83,23 @@ describe("campaign configuration validation", () => {
       ).success,
     ).toBe(true);
   });
+  it("rejects oversized policies before inspecting or transforming their entries", () => {
+    let hostnameReads = 0;
+    const oversized = Array.from({ length: 51 }, (_, index) => ({
+      get hostname() {
+        hostnameReads++;
+        return `site${index}.example.com`;
+      },
+      includeSubdomains: false,
+    }));
+    const result = policySchema.safeParse(oversized);
+    expect(result.success).toBe(false);
+    if (!result.success)
+      expect(result.error.issues).toEqual([
+        expect.objectContaining({ code: "too_big", maximum: 50 }),
+      ]);
+    expect(hostnameReads).toBe(0);
+  });
   it("requires destinations for ACTIVE but not suspended/archived drafts", () => {
     expect(
       campaignSchema.safeParse({ ...input, status: "ACTIVE" }).success,

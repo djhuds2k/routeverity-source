@@ -1,11 +1,45 @@
-# RouteVerity working baseline
+# RouteVerity working tracker
 
-Milestone 1A uses a deliberately small active Next.js application. Permitted
+RouteVerity uses a deliberately small active Next.js application with independent
+campaigns, transparent redirects, click reporting, conversions and Google Ads
+template support. Milestone 7 production-safety work is in progress; local
+implementation is not a claim of deployment or Google certification. Permitted
 upstream routes are retained outside the shipping route tree as a reference,
 not restored product functionality. Restricted trees remain excluded.
 
 - Node **22.23.2** (supported LTS), pnpm **9.15.9**.
 - Setup and services: [local development](docs/local-development.md).
+- Dedicated product checks and managed browser acceptance: [CI](docs/ci.md).
+- Public copy, approved identity and release-gated indexing: [public site](docs/public-site.md).
+- Release preparation and acceptance boundaries: [source release](docs/source-release.md)
+  and [independent restoration](docs/source-restoration.md). The completion plan
+  and release-readiness records are private operational documents, intentionally
+  omitted from public source. Security, licensing, hosted recovery and merchant
+  acceptance remain launch gates.
+- Framework security preparation (E176): Next **15.5.28**, with Next's Sharp
+  pinned to **0.35.5**. Further runtime dependency remediation and refreshed
+  release notices/source remain required.
+- SMTP security preparation (E177): email sign-in and operational alerts use
+  **Nodemailer 10.3.0**.
+- Validation/ID security preparation (E178): active **Zod 4.6.7** and patched
+  **Nano ID 5.1.16 / 3.3.18**. Retained upstream Zod 3 and remaining dependency
+  reachability/remediation still require review before release.
+- Shipping-dependency review (E179, 2026-10-30): patched seven advisory matches
+  observed in emitted modules and removed two unused web SDKs. The Windows
+  inventory has no remaining exact-version matches; vendored framework versions,
+  other workspace findings and target-platform release review remain open.
+- Current source preparation (E182, 2026-10-30): candidate7 includes refreshed
+  Ubuntu Linux inventory/notices. Four attribution gaps and native/security/legal
+  review remain open. See [source release](docs/source-release.md); no new archive
+  is published and the historical footer URL is unchanged.
+- Vendor security repair (E184, 2026-10-30): a version-bound pnpm Next patch and
+  exact dependency extensions repair the reviewed vendor behavior. Build-time
+  byte checks enforce installation; candidate8 preparation supersedes candidate7
+  for this revision. See [repair details](docs/security-vendor-patch.md).
+- Workspace cleanup (E186, 2026-10-31): removed unused SAML/direct matcher inputs
+  and pinned follow-redirects1.16.2. Audit findings drop487→385; wider security
+  acceptance remains open. See [dependency review](docs/workspace-dependency-review.md)
+  and candidate9 preparation in the source-release guide.
 - Product checks: `pnpm routeverity:licenses`, `pnpm routeverity:lint`,
   `pnpm routeverity:test`, `pnpm routeverity:typecheck`, `pnpm routeverity:build`.
 - Start: `pnpm routeverity:dev`, or after a build `pnpm routeverity:start`.
@@ -18,7 +52,7 @@ not restored product functionality. Restricted trees remain excluded.
 - Independent server conversions: [integration and reporting](docs/conversions.md).
 - Google templates and bounded source schema: [Google Ads setup](docs/google-ads.md).
 - Licensing: [compliance preparation](docs/open-source-compliance.md).
-- Free version-pinned corresponding source:
+- Historical preproduction source archive:
   [v0.1.0-preproduction.20261007](https://github.com/djhuds2k/routeverity-source/archive/refs/tags/v0.1.0-preproduction.20261007.zip).
   This fresh-history distribution excludes private operator progress and
   historical design-audit records, secrets and restricted implementations.

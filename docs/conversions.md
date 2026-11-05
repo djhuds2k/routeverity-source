@@ -47,6 +47,13 @@ It does **not** inject that ID into the next-hop URL, set a visitor cookie or
 automatically deliver it to the merchant. Your owned server integration must
 securely obtain the ID. No browser integration is claimed.
 
+The separate [merchant integration](merchant-integration.md) implements POST
+`/api/v1/merchant-conversions`, using consented first-party GCLID-hash context
+without reading the tracker response header. Its local API/lifecycle boundary is
+verified: unit/types/lint/build and all 37 real local E2E scenarios pass.
+It is not a standalone public resolver. A unique retained request is not proof
+of a unique Google ad interaction: repeated clicks can share a GCLID.
+
 ## Attribution and retries
 
 - The click must belong to the credential's workspace and have an allowed 302
@@ -56,13 +63,18 @@ securely obtain the ID. No browser integration is claimed.
   future and expired occurrences are rejected.
 - Goal currency must match. New events require an enabled goal and workspace.
 - Historical clicks remain eligible after campaign suspension, archive or
-  deletion, as explicitly approved. Evidence and logical goals are retained.
+  deletion, as explicitly approved, while click evidence remains within
+  retention. Logical goals are not removed by event expiry.
 - Events are immutable: no update, refund or correction API is provided.
 - Idempotency is scoped to workspace and hashed key. Order dedupe is scoped to
   workspace, goal and exact case-sensitive reference fingerprint.
 - Canonically identical retries return 200 with the original conversion ID.
   New events return 201. Changed retries/references return 409.
   Identical order retries using another idempotency key persist an alias.
+- A new direct-click conversion cannot reuse an order reserved by merchant
+  ingestion (`MERCHANT_ORDER_RESERVED`, 409). Conversely, merchant ingestion
+  rejects a new submission for an accepted direct order. Already accepted direct
+  retries remain supported. Avoid submitting one order through both APIs.
 - Disabled goals permit accepted retries; disabled workspaces and revoked keys
   block even retries. Revocation/configuration and ingestion serialize through
   the workspace row lock; event and receipt are committed atomically.
@@ -80,9 +92,12 @@ Workspace ingestion limit is 600 requests/minute, including retries.
 Conversions provides UTC occurrence-date, campaign and goal filters, separate
 currency totals, daily count/revenue charts with exact zero-filled tables, goal
 breakdowns, deterministic 50-row pages and owned event detail linked to clicks.
-Click detail shows its latest 50 conversions. Overview reports all-time events,
+Click detail shows its latest 50 retained conversions. Overview reports retained events,
 currency-separated revenue, revenue per prepared redirect and distinct
-converted click IDs divided by prepared redirects, **not unique people**.
+converted click IDs divided by retained prepared redirects, **not unique people**.
+Conversion rate and per-redirect revenue include only conversions whose allowed
+click evidence is still retained. Total conversion revenue can include events
+whose click evidence has expired; it is not silently discarded.
 Overview/report queries use repeatable-read snapshots per request; pagination
 requests are live, not a frozen export.
 
@@ -97,8 +112,24 @@ Do not send email addresses, secrets or sensitive customer data in references
 or metadata. Configure ingress limits/timeouts and redact Authorization,
 payloads and postback queries in hosting logs. The database transaction has a
 10-second timeout; a complete ingress/body/SDK deadline is not implemented.
-Automatic retention, organisation deletion, supervised operations, HTTPS and
-corresponding-source publication remain release prerequisites.
+The independent retention worker deletes conversions and retry receipts after
+90 days from conversion receipt by default; owners can shorten to 30 or 60 days.
+Occurrence time still controls reporting/attribution, not retention. Retry
+receipts are drained in bounded batches before their conversion is removed;
+ingestion and cleanup serialize through the workspace lock. Deleted evidence
+cannot support indefinite idempotency/order dedupe, and expired click evidence
+cannot support a new attribution. No update/correction API is added.
+Owners can now delete workspace data, including conversions, goals, receipts and
+credentials, through `/account`. Account deletion requires no owned workspaces
+and does not silently delete shared data. Supervised cleanup operations, HTTPS,
+larger-export/rights-request fulfilment and matching corresponding-source publication remain
+release prerequisites.
+
+Owner workspace JSON exports include retained canonical events, goal and
+non-secret key metadata, order/customer references and bounded scalar metadata.
+Revenue stays an exact decimal string. Credential, order/payload and receipt
+hashes are not exported. The 10,000-row-per-collection and 20 MiB total limits
+fail explicitly rather than producing partial data; see [privacy](privacy.md).
 
 ## Local checks
 

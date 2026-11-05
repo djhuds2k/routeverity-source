@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import { requireUser } from "./auth";
 import { allowRequest } from "./rate-limit";
+import { reportOperationalError } from "./safe-error-log";
 import { canWrite } from "./validation";
 
 export type FormState = {
@@ -36,7 +37,7 @@ export async function perform(
       if (error.code === "P2025")
         return { error: "This item is no longer available. Refresh the page." };
     }
-    console.error("RouteVerity mutation failed", error);
+    reportOperationalError("routeverity.mutation.failed", error);
     return {
       error: "The request failed. Please retry, or check the application logs.",
     };

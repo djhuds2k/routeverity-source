@@ -1,3 +1,4 @@
+// Modified for RouteVerity, 2026-10-06 through 2026-10-17. See root NOTICE.md.
 import { NextResponse, type NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {

@@ -79,9 +79,12 @@ queue is used.
 
 Stop watch with Ctrl+C. Configure a supervised scanner/retry schedule before
 hosting. When it is stopped or broken, redirects still persist events and reports
-show pending enrichment. **Raw UA remains pending until processed**: there is
-no automatic raw-input expiry or full data-retention scheduler in this milestone.
-Worker health and a maximum pending-age policy are release prerequisites.
+show pending enrichment. Successful enrichment clears raw input immediately.
+The independent [retention worker](privacy.md) now erases pending raw UA at
+24 hours even if enrichment is stopped. Late enrichment uses explicit unknown
+dimensions and a conditional raw-input check prevents stale enrichment from
+overwriting a concurrent erasure. Hosted worker supervision and expiry monitoring
+remain release prerequisites; stopped cleanup cannot guarantee erasure deadlines.
 
 ## Reporting and export
 
@@ -112,8 +115,14 @@ failures return 503 with sanitized error telemetry.
 Owners, members, viewers and billing roles can inspect/export their workspace's
 data. Every query, detail lookup and export remains tenant scoped. Deleted
 campaigns are identified by their retained campaign ID rather than losing audit
-attribution. Broad personal-data export, organisation deletion and automatic
-retention remain unimplemented.
+attribution until the workspace retention deadline. Owners can choose 30, 60 or
+90 days (default/maximum 90); expired click records disappear from reports,
+details and exports after cleanup. No permanent aggregate archive is maintained.
+Workspace owners can erase their workspace and its detailed evidence through
+`/account`; operator incident history remains separately retained.
+Owner workspace JSON export and personal-account JSON are available separately.
+They exclude raw UA and credentials; provider/incident/rights-request handling
+remains separate work.
 
 ## Verification and remaining work
 

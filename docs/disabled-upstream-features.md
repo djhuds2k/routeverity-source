@@ -1,5 +1,23 @@
 # Disabled upstream features
 
+Dependency boundary update,2026-10-31 (E186): removed the active web manifest's
+unused `@boxyhq/saml-jackson` and direct `minimatch`. SAML/SCIM/SSO and legacy
+referral-fraud rules are outside the shipping product; retained reference code
+does not enable those features or promise its former SDKs remain installed.
+The former SDK was the only node-forge parent in the lockfile. Axios/proxy
+follow-redirects inputs are pinned to1.16.2 within the existing major version.
+Other glob/minimatch generations remain in build/email tooling and need separate
+API-compatible migration; their presence is not silently cleared.
+
+Dependency boundary update, 2026-10-30: the active web manifest no longer
+declares `@mendable/firecrawl-js` or `@team-plain/typescript-sdk`. Active routes,
+RouteVerity logic, request-error instrumentation, shared packages and product
+tests have no imports of these SDKs, and the instrumented build does not observe
+them in emitted modules or server traces. Old reference/support/scraping code
+is not restored or supported by retaining its source; it would need separate
+dependency and security work before being enabled. Other workspaces can still
+retain their own legacy dependency graph, including Zod 3.
+
 Milestones 2/3 add independently developed campaign configuration and a transparent
 redirect engine with minimal durable audit and revocable credentials;
 it does not restore upstream campaign/partner functionality. See the

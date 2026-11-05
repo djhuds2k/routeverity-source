@@ -1,5 +1,6 @@
 import { prisma } from "../lib/prisma";
 import { enrichClickBatch } from "../lib/routeverity/click-enrichment";
+import { runWorkerPass } from "../lib/routeverity/worker-health";
 
 const watch = process.argv.includes("--watch");
 let stopping = false;
@@ -14,7 +15,7 @@ async function main() {
   if (process.argv.slice(2).some((value) => value !== "--watch"))
     throw new Error("Only --watch is supported.");
   do {
-    const result = await enrichClickBatch();
+    const result = await runWorkerPass("ENRICHMENT", () => enrichClickBatch());
     console.info(
       JSON.stringify({ event: "routeverity.click.enrichment", ...result }),
     );

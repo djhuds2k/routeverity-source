@@ -1,32 +1,28 @@
 import { prisma } from "../lib/prisma";
+import {
+  IntegrityMismatch,
+  redirectIntegrityMismatches,
+  runWorkerPass,
+} from "../lib/routeverity/worker-health";
 
 async function main() {
-  const fields = prisma.routeVerityRedirectAudit.fields;
-  const mismatches = await prisma.routeVerityRedirectAudit.count({
-    where: {
-      OR: [
-        {
-          NOT: {
-            validatedNextHopHash: { equals: fields.actualRedirectTargetHash },
-          },
-        },
-        { validationResult: { not: "ALLOWED" } },
-        { redirectStatus: { not: 302 } },
-      ],
-    },
+  await runWorkerPass("INTEGRITY", async () => {
+    const mismatches = await redirectIntegrityMismatches();
+    if (mismatches) {
+      console.error(
+        JSON.stringify({
+          event: "routeverity.redirect.critical",
+          code: "AUDIT_INTEGRITY_MISMATCH",
+          count: mismatches,
+        }),
+      );
+      throw new IntegrityMismatch("Persisted redirect integrity check failed.");
+    } else {
+      console.log(
+        "PASS: persisted redirect audit fingerprints/statuses match.",
+      );
+    }
   });
-  if (mismatches) {
-    console.error(
-      JSON.stringify({
-        event: "routeverity.redirect.critical",
-        code: "AUDIT_INTEGRITY_MISMATCH",
-        count: mismatches,
-      }),
-    );
-    process.exitCode = 1;
-  } else {
-    console.log("PASS: persisted redirect audit fingerprints/statuses match.");
-  }
 }
 
 main()

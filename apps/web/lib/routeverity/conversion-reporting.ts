@@ -145,3 +145,44 @@ export async function loadConversionReport(
     },
   );
 }
+
+export async function loadMerchantReport(
+  projectId: string,
+  filters: ConversionFilters,
+) {
+  const where: Prisma.RouteVerityMerchantSubmissionWhereInput = {
+    projectId,
+    occurredAt: { gte: filters.fromDate, lt: filters.untilDate },
+    ...(filters.campaign ? { campaignId: filters.campaign } : {}),
+    ...(filters.goal ? { goalId: filters.goal } : {}),
+    status: { not: "ATTRIBUTED" },
+  };
+  return prisma.$transaction(
+    async (tx) => {
+      const [groups, rows] = await Promise.all([
+        tx.routeVerityMerchantSubmission.groupBy({
+          by: ["status", "currency"],
+          where,
+          _sum: { revenue: true },
+          _count: { _all: true },
+          orderBy: [{ status: "asc" }, { currency: "asc" }],
+        }),
+        tx.routeVerityMerchantSubmission.findMany({
+          where,
+          orderBy: [{ occurredAt: "desc" }, { id: "desc" }],
+          take: 50,
+          skip: (filters.pageNumber - 1) * 50,
+        }),
+      ]);
+      return {
+        groups,
+        rows,
+        total: groups.reduce((sum, row) => sum + row._count._all, 0),
+      };
+    },
+    {
+      isolationLevel: Prisma.TransactionIsolationLevel.RepeatableRead,
+      timeout: 10000,
+    },
+  );
+}

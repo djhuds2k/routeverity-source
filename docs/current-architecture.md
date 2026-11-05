@@ -1,7 +1,36 @@
-# Current architecture and usable OSS
+# Current RouteVerity architecture
+
+Recovery scope update: 2026-10-13. The active product is the independently
+implemented [Next.js application](../apps/web/app), with
+[RouteVerity logic](../apps/web/lib/routeverity), additive Prisma schema and
+[product tests](../apps/web/tests/routeverity). Permitted upstream routes were
+moved outside the active route graph; restricted trees remain excluded.
+
+- NextAuth email authentication and Prisma database sessions.
+- MySQL-backed workspaces, campaigns, destination policies, durable redirect
+  evidence, conversion goals/keys/events, retention and operational health.
+- Transparent `/click` validates the visible next hop and uses that exact value
+  as Location; metadata and database policy never substitute a destination.
+- Redis REST supplies rate limits. Analytics/enrichment/retention/integrity use
+  independent database-backed workers, not Tinybird or QStash.
+- Tenant-scoped click/conversion reports, CSV/JSON export, deletion and private
+  operator controls are implemented. Stripe billing and outgoing webhooks are
+  not active.
+- Existing RouteVerity assets, public layout and dashboard design are retained.
+
+Milestones 1–6 have historical local acceptance; Milestone 7 remains partially
+complete overall. E175 (2026-10-29) refreshes local build/unit/type/lint/boundary
+acceptance, authenticated five-service health and all 40 browser/HTTP/SQL tests.
+Hosted acceptance remains incomplete, and current dependency advisories require
+security remediation before release. See the [source-release acceptance](source-release.md),
+[redirect contract](transparent-redirect.md) and
+[local setup](local-development.md) for implementation and validation boundaries.
+
+## Historical Milestone 0 upstream inventory
 
 Inspected 2026-10-06 at the commit recorded in [upstream-dub.md](upstream-dub.md).
-This describes upstream, not an implemented RouteVerity product.
+The remaining sections describe the upstream inspection, not current feature
+absence or current active-service requirements.
 
 ## Existing architecture
 

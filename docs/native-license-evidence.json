@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "scope": "Complete unmodified upstream component text; not clearance for the entire native bundle or its source/relinking obligations.",
+  "records": [
+    {
+      "name": "uhdr",
+      "version": "2.0.2",
+      "binaryPackages": [
+        "@img/sharp-libvips-linux-x64@1.3.4",
+        "@img/sharp-libvips-linuxmusl-x64@1.3.4"
+      ],
+      "vendorRowName": "libultrahdr",
+      "vendorDeclaredLicense": "MIT License",
+      "source": "https://raw.githubusercontent.com/google/libultrahdr/e5f5a022fe96fc4dc2ee35c19f733a50df807abe/LICENSE",
+      "revision": "e5f5a022fe96fc4dc2ee35c19f733a50df807abe",
+      "sha256": "c9247b5cb07866938643cc238292434e6f2af8642e1fce10771c0e4cc7909316",
+      "file": "docs/licenses/c9247b5cb07866938643cc238292434e6f2af8642e1fce10771c0e4cc7909316.txt",
+      "upstreamStatement": "Distributed under the terms of both the MIT license and Apache License Version 2.0; retain the complete text without inferring a new SPDX choice.",
+      "review": "Component evidence only; complete native copyright/source/replacement and qualified conveyance acceptance remain open."
+    }
+  ]
+}

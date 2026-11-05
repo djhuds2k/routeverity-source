@@ -1,6 +1,13 @@
 import { brand } from "@/lib/routeverity/brand";
+import { publicMetadata } from "@/lib/routeverity/public-metadata";
 import Image from "next/image";
 import Link from "next/link";
+
+export const metadata = publicMetadata(
+  "/",
+  "Transparent click tracking",
+  "Transparent redirects, campaign reports and server-side conversion measurement. Preproduction evaluation; hosted launch and merchant integration remain in review.",
+);
 
 export default function Home() {
   return (
@@ -32,7 +39,7 @@ export default function Home() {
           ))}
           <Link href="/login">Login</Link>
           <Link className="rv-button" href="/signup">
-            Get Started
+            Evaluate the app
           </Link>
         </nav>
       </header>
@@ -46,20 +53,21 @@ export default function Home() {
               {brand.tagline}
             </h1>
             <p className="rv-muted mt-6 max-w-lg text-xl leading-relaxed">
-              {brand.description} Designed for transparent advertising
-              measurement.
+              Inspect transparent redirects, report campaign clicks and measure
+              conversions reported by your server.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
               <Link href="/signup" className="rv-button">
-                Get Started
+                Evaluate the app
               </Link>
               <Link href="/transparency" className="rv-button rv-secondary">
                 Our approach
               </Link>
             </div>
             <p className="rv-muted mt-6 text-sm">
-              Working foundation now. Transparent tracking and attribution are
-              being built independently.
+              Preproduction evaluation. Core tracking and reporting are
+              implemented; hosted launch and real merchant integration remain in
+              review.
             </p>
           </div>
           <div className="relative overflow-hidden rounded-2xl bg-[var(--rv-ink)] p-8 text-white sm:p-12">
@@ -83,16 +91,16 @@ export default function Home() {
         <section className="mt-16 grid gap-5 md:grid-cols-3">
           {[
             [
-              "Reliable foundations",
-              "Verified email access, isolated workspaces and basic standard links.",
+              "Transparent redirects",
+              "Campaign policies validate the visible destination and record redirect evidence before sending the response.",
             ],
             [
-              "Transparent by design",
-              "An honest account of what is available today and what is still being built.",
+              "Reports and conversions",
+              "Review retained click evidence, export reports and receive authenticated server conversion events with revenue separated by currency.",
             ],
             [
-              "Your domains",
-              "Ownership verification and domain controls without opaque claims about DNS or TLS.",
+              "Your workspaces and domains",
+              "Verified email access, workspace roles and domain ownership controls. Hosting and TLS require separate setup.",
             ],
           ].map(([title, text]) => (
             <article className="rv-card" key={title}>
@@ -108,6 +116,7 @@ export default function Home() {
           <Link href="/transparency">Transparency</Link>
           <Link href="/security">Security</Link>
           <Link href="/pricing">Pricing</Link>
+          <Link href="/contact">Contact</Link>
         </div>
       </footer>
     </div>

@@ -22,6 +22,7 @@ const mocks = vi.hoisted(() => ({
   count: vi.fn(),
   transaction: vi.fn(),
   allow: vi.fn(),
+  authorLock: vi.fn(),
 }));
 vi.mock("@/lib/routeverity/auth", () => ({
   requireUser: vi.fn().mockResolvedValue({ id: "user_test" }),
@@ -54,6 +55,7 @@ beforeEach(() => {
   vi.clearAllMocks();
   process.env.NEXTAUTH_URL = "http://localhost:8888";
   mocks.allow.mockResolvedValue(true);
+  mocks.authorLock.mockResolvedValue([{ id: "user_test" }]);
   mocks.member.mockResolvedValue({ role: "owner", project: workspace });
   mocks.project.mockResolvedValue({ ...workspace, totalLinks: 1 });
   mocks.projectLock.mockResolvedValue({ count: 1 });
@@ -70,6 +72,7 @@ beforeEach(() => {
   mocks.count.mockResolvedValue(0);
   mocks.transaction.mockImplementation((operation) =>
     operation({
+      $queryRaw: mocks.authorLock,
       user: { update: mocks.user },
       project: {
         update: mocks.project,
@@ -89,6 +92,21 @@ beforeEach(() => {
 });
 
 describe("tenant-scoped writes", () => {
+  it("rejects a deleted author before creating a link or touching a workspace", async () => {
+    mocks.authorLock.mockResolvedValue([]);
+    expect((await createLink("team", {}, form())).error).toContain(
+      "account is unavailable",
+    );
+    expect(mocks.project).not.toHaveBeenCalled();
+    expect(mocks.linkCreate).not.toHaveBeenCalled();
+  });
+  it("rechecks membership after obtaining the workspace lock", async () => {
+    mocks.member
+      .mockResolvedValueOnce({ role: "member", project: workspace })
+      .mockResolvedValueOnce(null);
+    expect((await createLink("team", {}, form())).error).toContain("no longer");
+    expect(mocks.linkCreate).not.toHaveBeenCalled();
+  });
   it("creates an unverified custom tracking domain under the workspace lock", async () => {
     const data = new FormData();
     data.set("slug", "track.example.com");

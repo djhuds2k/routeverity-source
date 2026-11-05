@@ -1,5 +1,188 @@
 # Transparent redirect failure modes
 
+## Merchant ingestion and reconciliation
+
+POST merchant submissions distinguish accepted receipt from attributed revenue:
+201 can mean PENDING or terminal UNATTRIBUTED, not conversion success. Unknown/
+denied consent is rejected before storage. Hash absence and ambiguity are
+terminal; no first/latest/fuzzy fallback is used. Only absent durable evidence
+with a valid hash can be retried, under original occurrence time, within the
+approved 24-hour receipt-based reconciliation window.
+
+The bounded scanner runs as `pnpm routeverity:reconcile-merchants [--watch]`.
+Each pass handles at most 100 due active-workspace submissions, rechecks current
+key/goal/workspace state and serializes with ingestion/deletion. Revocation or
+unavailable goals terminate attribution; suspension pauses processing without
+extending the deadline. Already attributed events remain immutable even if
+later same-GCLID requests make that identifier ambiguous.
+
+Database/integrity failure fails the pass rather than becoming no-match success.
+The fourth latest-state worker row is MERCHANT_RECONCILIATION. Its missing/stale/
+failed state is required by health when active merchant work is pending; pending
+due work older than the ten-minute grace and expired merchant data also surface
+explicit health issues. No pending workload means an unused merchant worker is
+not a new startup failure for existing direct-click installations.
+
+Merchant order reservations prevent a second conversion through the direct
+endpoint, and accepted direct orders block new merchant submissions. Retry
+receipts and parent submissions expire in bounded receipt-first batches under
+workspace retention, including suspended/orphan data; deletion and export cover
+the new data. Removed evidence cannot enforce perpetual retry/dedupe.
+
+These paths build and pass unit checks and all 37 real local E2E scenarios,
+including seven new merchant cases. The actual bounded CLI exited successfully
+and its persisted success heartbeat was verified. Initial Windows launch denials
+and a stalled orphan-server run were superseded by a clean full pass. No hosted
+scanner supervision, production migration or live Google validation has occurred.
+
+## Operator workspace controls
+
+Operator access is disabled without explicit configuration and always depends
+on the current, verified database account, not a session-provided email or a
+workspace role. A stale workspace revision, lost operator verification, invalid
+reason/operation, redundant state change or audit failure rejects the mutation.
+Workspace state and audit evidence are committed together; failed transactions
+roll back the provisional revision touch and state update. Ordinary members cannot
+resume an operator-suspended workspace through normal workspace actions.
+
+Suspension takes effect for subsequent policy lookups and workspace access.
+Already authorized in-flight requests may finish; this is not cancellation of
+issued requests. Resumption does not un-revoke credentials or un-suspend other
+objects. Audits are append-only through the application, not database-enforced
+write-once storage. The independent cleanup worker expires audits after 365
+days; hosted scheduling and expiry-failure alerts remain release gates.
+
+## Private worker health and alerts
+
+The enrichment, applying retention and integrity workers persist start,
+progress, success and failure in one latest-state row per worker. Dry-run
+retention never writes a heartbeat. Deploy the additive worker-health table
+before instrumented workers or the operator health page. A failed heartbeat
+write fails the pass rather than silently running unmonitored work. Run only
+one instance of each worker: a newer run supersedes the older run, whose
+conditional progress/completion writes fail instead of replacing newer state.
+This is not a distributed work lease or an append-only audit history.
+
+The private CLI and currently verified operator page check actual MySQL and
+Redis availability. Enrichment/retention progress becomes stale at five minutes;
+integrity requires successful completion within ten minutes, not merely a
+running heartbeat. Pending enrichment warns at ten minutes. Expired detailed
+records, 24-hour raw input and 365-day operator evidence receive a ten-minute
+expiry grace before critical alerts. Detailed expiry uses current workspace
+30/60/90-day policy, conversion receipt time and orphan evidence's 90-day
+maximum. Invalid stored policies and failed workers are explicit critical
+issues. Missing workers and invalid/future timestamps are not healthy defaults.
+
+Each dependency has a three-second observation deadline, and the snapshot uses
+a bounded repeatable-read transaction. Deadlines do not cancel underlying SDK
+work; process shutdown can take longer. Slow or failed queries report database
+unavailability, never empty backlogs. Redis uses read-only PING, not key scans.
+
+`pnpm routeverity:health` logs fixed issue codes and returns zero only when
+healthy. `--watch` waits 60 seconds between checks. No emails are sent unless
+`--notify` is provided with one privately configured `ROUTEVERITY_ALERT_EMAIL`;
+the existing `EMAIL_SERVER` and `EMAIL_FROM` provide the SMTP channel. Remote
+SMTP requires certificate-validated implicit TLS or STARTTLS. Messages contain
+dependency status, check time and fixed codes, not customer records or error
+messages. SMTP acceptance is not proof of inbox delivery.
+
+An accepted incident starts an in-memory hourly repeat cooldown. Recovery is
+sent only after an accepted incident; failed SMTP attempts are explicitly logged
+and retried by the watcher without advancing state. Restarting the monitor or
+an ambiguously failed delivery can duplicate messages. A stopped monitor cannot
+alert on its own absence: an independent external dead-man check and supervised
+hosting remain release requirements. No production scheduling, alert recipient,
+schema installation or real alert delivery is enabled by the local tests.
+
+## Retention and cleanup
+
+Detailed records expire after 90 days by default; owners may shorten to 30 or
+60 days with explicit confirmation. Clicks use creation time, conversions and
+their retry receipts use conversion receipt time, and operator audits use a
+separate 365-day limit. Pending raw user-agent input becomes eligible for erasure
+at 24 hours regardless of enrichment status. Late enrichment never parses that
+expired raw input and records unknown dimensions instead.
+
+The CLI defaults to a read-only, bounded preview. Only `--apply` deletes records.
+Each workspace cleanup transaction locks its current workspace row without
+changing its revision, ordering deletion with ingestion and retention settings.
+It reads the current policy even for suspended workspaces. Unsupported stored
+policies fail explicitly rather than deleting against a guessed setting.
+Historical evidence without a workspace uses the explicit 90-day maximum.
+
+Every batch selects at most 100 clicks, conversions and retry receipts (library
+maximum 500). Receipt batches are deleted before their conversion; a conversion
+remains until all its receipts are drained. Related deletes share the workspace
+transaction, and failure rolls back that batch. Completed earlier batches remain
+committed. Reruns are safe; records exactly at the detailed/audit cutoff remain,
+while raw input at the 24-hour cutoff is erased. Cleanup does not change targets,
+credentials, goals, campaign state or retained integrity fingerprints.
+
+A stopped cleanup worker cannot guarantee physical retention deadlines. Reports
+and exports use remaining database records and therefore change after cleanup;
+no permanent aggregate archive is maintained. Expired clicks cannot support new
+attribution, and removed receipts/order records cannot enforce indefinite dedupe.
+Retained conversions can outlive their click evidence because the two retention
+clocks differ. Overview conversion rate and per-redirect revenue use only
+conversions with retained allowed click evidence, avoiding inflated denominators
+or conversion rates above 100 percent caused by expired clicks.
+
+Live deletion does not instantly erase provider backups, infrastructure logs or
+downloaded exports. Restoration must reapply expiry before serving restored data.
+Larger-export/rights-request fulfilment, monitored scheduling and backup/log
+retention remain separate release work.
+
+## Account and workspace deletion
+
+Typed exact confirmation and explicit checkboxes are required. Workspace
+deletion locks and checks its current revision, then rechecks ownership before
+erasing tenant data in one transaction. Suspended workspaces remain deletable
+from `/account`; deletion does not resume them. State changes, stale forms,
+changed roles and storage/deadlock/timeout failures produce errors, not partial
+deletion-shaped success. The transaction deadline is ten seconds.
+
+Account deletion locks the current verified user and refuses all owned
+workspaces, even suspended ones. It revokes live sessions/login tokens, removes
+memberships and clears link authorship without deleting shared links. Workspace
+creation and standard-link authorship use the same user lock; writes for missing
+accounts or revoked memberships fail. Operator scalar-ID incident history remains
+under the approved 365-day retention, including operator reasons.
+
+Durable transparent audit inserts acquire the enabled workspace lock before
+insertion. This orders delayed inserts with workspace deletion, preventing
+recreation of scalar-ID evidence after erasure commits. Existing 1,500 ms audit
+deadline and fail-closed behavior are unchanged; lock contention may reject a
+click. Earlier-authorized responses may still finish. Conversion ingestion
+already orders inserts with the workspace lock. No target selection, visitor
+classification or alternative redirect is introduced.
+
+External DNS/hosting, backups, logs, expired Redis keys and exported files are
+not instantly erased. Large workspace deletion can time out and roll back; no
+automatic asynchronous purge is claimed. Infrastructure recovery/erasure and
+larger-export/rights-request fulfilment remain release work.
+
+## Account and workspace export
+
+Full workspace JSON is owner-only, including suspended owned workspaces.
+Account JSON contains only the current user's profile, memberships, non-secret
+session/provider metadata and link-authorship references, not full shared
+content. Current ownership is checked inside the repeatable-read export snapshot.
+Auth redirects are preserved; non-owner or foreign workspace requests get 403.
+
+Each collection is read with a 10,001-row sentinel. A collection over 10,000
+records or serialized UTF-8 JSON over 20 MiB returns 413 without an attachment
+or partial success file. Query parameters are rejected. Rate exhaustion returns
+429, and database failures return 503 with sanitized telemetry. Larger assisted
+export is not yet implemented, rather than an undocumented fallback.
+
+Explicit field selections exclude credentials/hashes, raw UA, other members'
+email addresses, internal retry hashes and operator incident history. Arbitrary
+customer notes, metadata and standard-link URLs can contain sensitive text;
+owner downloads must be handled privately. Downloads use no-store headers and
+do not alter tracking state or retention clocks. Subsequent deletion cannot
+erase already downloaded files. These downloads are not automatic legal
+subject-access responses or restorable database backups.
+
 ## Domain ownership and mutations
 
 TXT ownership checks run outside database transactions, using a DNS resolver

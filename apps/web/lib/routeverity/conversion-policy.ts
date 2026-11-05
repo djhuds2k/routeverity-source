@@ -4,6 +4,7 @@ import { currencies } from "./campaign-policy";
 import { fingerprint } from "./transparent-policy";
 
 export const conversionAttributionPolicy = "direct-click-30d-v1";
+export const conversionAttributionWindowMs = 30 * 86400000;
 export class ConversionError extends Error {
   constructor(
     public readonly status: number,
@@ -137,7 +138,10 @@ export function validateConversionTime(
     occurredAt > now
   )
     throw new ConversionError(400, "INVALID_CONVERSION_TIME");
-  if (occurredAt.getTime() - clickTime.getTime() > 30 * 86400000)
+  if (
+    occurredAt.getTime() - clickTime.getTime() >
+    conversionAttributionWindowMs
+  )
     throw new ConversionError(422, "ATTRIBUTION_WINDOW_EXPIRED");
 }
 

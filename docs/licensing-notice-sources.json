@@ -1,0 +1,453 @@
+{
+  "schemaVersion": 1,
+  "notice": "Unmodified public upstream licence texts (or original CC0 declaration) retrieved at package-published gitHead, exact version tag, or the exact Next vendored release; check compatibility with the installed component. Missing notices are not replaced with invented copyright.",
+  "records": [
+    {
+      "name": "@radix-ui/react-compose-refs",
+      "version": "1.1.2",
+      "actualVersion": "1.1.2",
+      "declaredLicense": "MIT",
+      "source": "https://raw.githubusercontent.com/radix-ui/primitives/fcef0668a5c827e5a4baac405474d75680f9a4eb/LICENSE",
+      "revision": "fcef0668a5c827e5a4baac405474d75680f9a4eb",
+      "sha256": "0e80a2d229d2fd4fc7e8636142ec5d0ff0bc031f14c15b682e2ac01dfd5b5138",
+      "file": "docs/licenses/0e80a2d229d2fd4fc7e8636142ec5d0ff0bc031f14c15b682e2ac01dfd5b5138.txt"
+    },
+    {
+      "name": "@radix-ui/react-context",
+      "version": "1.1.2",
+      "actualVersion": "1.1.2",
+      "declaredLicense": "MIT",
+      "source": "https://raw.githubusercontent.com/radix-ui/primitives/fcef0668a5c827e5a4baac405474d75680f9a4eb/LICENSE",
+      "revision": "fcef0668a5c827e5a4baac405474d75680f9a4eb",
+      "sha256": "0e80a2d229d2fd4fc7e8636142ec5d0ff0bc031f14c15b682e2ac01dfd5b5138",
+      "file": "docs/licenses/0e80a2d229d2fd4fc7e8636142ec5d0ff0bc031f14c15b682e2ac01dfd5b5138.txt"
+    },
+    {
+      "name": "@radix-ui/react-direction",
+      "version": "1.1.1",
+      "actualVersion": "1.1.1",
+      "declaredLicense": "MIT",
+      "source": "https://raw.githubusercontent.com/radix-ui/primitives/fcef0668a5c827e5a4baac405474d75680f9a4eb/LICENSE",
+      "revision": "fcef0668a5c827e5a4baac405474d75680f9a4eb",
+      "sha256": "0e80a2d229d2fd4fc7e8636142ec5d0ff0bc031f14c15b682e2ac01dfd5b5138",
+      "file": "docs/licenses/0e80a2d229d2fd4fc7e8636142ec5d0ff0bc031f14c15b682e2ac01dfd5b5138.txt"
+    },
+    {
+      "name": "@radix-ui/react-id",
+      "version": "1.1.1",
+      "actualVersion": "1.1.1",
+      "declaredLicense": "MIT",
+      "source": "https://raw.githubusercontent.com/radix-ui/primitives/fcef0668a5c827e5a4baac405474d75680f9a4eb/LICENSE",
+      "revision": "fcef0668a5c827e5a4baac405474d75680f9a4eb",
+      "sha256": "0e80a2d229d2fd4fc7e8636142ec5d0ff0bc031f14c15b682e2ac01dfd5b5138",
+      "file": "docs/licenses/0e80a2d229d2fd4fc7e8636142ec5d0ff0bc031f14c15b682e2ac01dfd5b5138.txt"
+    },
+    {
+      "name": "@radix-ui/react-use-callback-ref",
+      "version": "1.1.1",
+      "actualVersion": "1.1.1",
+      "declaredLicense": "MIT",
+      "source": "https://raw.githubusercontent.com/radix-ui/primitives/fcef0668a5c827e5a4baac405474d75680f9a4eb/LICENSE",
+      "revision": "fcef0668a5c827e5a4baac405474d75680f9a4eb",
+      "sha256": "0e80a2d229d2fd4fc7e8636142ec5d0ff0bc031f14c15b682e2ac01dfd5b5138",
+      "file": "docs/licenses/0e80a2d229d2fd4fc7e8636142ec5d0ff0bc031f14c15b682e2ac01dfd5b5138.txt"
+    },
+    {
+      "name": "@radix-ui/react-use-escape-keydown",
+      "version": "1.1.1",
+      "actualVersion": "1.1.1",
+      "declaredLicense": "MIT",
+      "source": "https://raw.githubusercontent.com/radix-ui/primitives/fcef0668a5c827e5a4baac405474d75680f9a4eb/LICENSE",
+      "revision": "fcef0668a5c827e5a4baac405474d75680f9a4eb",
+      "sha256": "0e80a2d229d2fd4fc7e8636142ec5d0ff0bc031f14c15b682e2ac01dfd5b5138",
+      "file": "docs/licenses/0e80a2d229d2fd4fc7e8636142ec5d0ff0bc031f14c15b682e2ac01dfd5b5138.txt"
+    },
+    {
+      "name": "@radix-ui/react-use-layout-effect",
+      "version": "1.1.1",
+      "actualVersion": "1.1.1",
+      "declaredLicense": "MIT",
+      "source": "https://raw.githubusercontent.com/radix-ui/primitives/fcef0668a5c827e5a4baac405474d75680f9a4eb/LICENSE",
+      "revision": "fcef0668a5c827e5a4baac405474d75680f9a4eb",
+      "sha256": "0e80a2d229d2fd4fc7e8636142ec5d0ff0bc031f14c15b682e2ac01dfd5b5138",
+      "file": "docs/licenses/0e80a2d229d2fd4fc7e8636142ec5d0ff0bc031f14c15b682e2ac01dfd5b5138.txt"
+    },
+    {
+      "name": "@radix-ui/react-use-previous",
+      "version": "1.1.1",
+      "actualVersion": "1.1.1",
+      "declaredLicense": "MIT",
+      "source": "https://raw.githubusercontent.com/radix-ui/primitives/fcef0668a5c827e5a4baac405474d75680f9a4eb/LICENSE",
+      "revision": "fcef0668a5c827e5a4baac405474d75680f9a4eb",
+      "sha256": "0e80a2d229d2fd4fc7e8636142ec5d0ff0bc031f14c15b682e2ac01dfd5b5138",
+      "file": "docs/licenses/0e80a2d229d2fd4fc7e8636142ec5d0ff0bc031f14c15b682e2ac01dfd5b5138.txt"
+    },
+    {
+      "name": "@radix-ui/react-use-size",
+      "version": "1.1.1",
+      "actualVersion": "1.1.1",
+      "declaredLicense": "MIT",
+      "source": "https://raw.githubusercontent.com/radix-ui/primitives/fcef0668a5c827e5a4baac405474d75680f9a4eb/LICENSE",
+      "revision": "fcef0668a5c827e5a4baac405474d75680f9a4eb",
+      "sha256": "0e80a2d229d2fd4fc7e8636142ec5d0ff0bc031f14c15b682e2ac01dfd5b5138",
+      "file": "docs/licenses/0e80a2d229d2fd4fc7e8636142ec5d0ff0bc031f14c15b682e2ac01dfd5b5138.txt"
+    },
+    {
+      "name": "class-variance-authority",
+      "version": "0.7.0",
+      "actualVersion": "0.7.0",
+      "declaredLicense": "Apache-2.0",
+      "source": "https://raw.githubusercontent.com/joe-bell/cva/a1f7f504ef63f6f0b41a6a01218c19146337b46f/LICENSE",
+      "revision": "a1f7f504ef63f6f0b41a6a01218c19146337b46f",
+      "sha256": "0ccbf956cffc8dcf515809433cb5242ee67c94513d46e48c261d68d0880de406",
+      "file": "docs/licenses/0ccbf956cffc8dcf515809433cb5242ee67c94513d46e48c261d68d0880de406.txt"
+    },
+    {
+      "name": "embla-carousel-autoplay",
+      "version": "8.1.7",
+      "actualVersion": "8.1.7",
+      "declaredLicense": "MIT",
+      "source": "https://raw.githubusercontent.com/davidjerleke/embla-carousel/d82646603827dbd07558a2702a208a8a57866b38/LICENSE",
+      "revision": "d82646603827dbd07558a2702a208a8a57866b38",
+      "sha256": "992490064b90ec94c302fe5f29dcc14cb44145857064e46f9ffe6c8f511c1093",
+      "file": "docs/licenses/992490064b90ec94c302fe5f29dcc14cb44145857064e46f9ffe6c8f511c1093.txt"
+    },
+    {
+      "name": "embla-carousel-react",
+      "version": "8.1.7",
+      "actualVersion": "8.1.7",
+      "declaredLicense": "MIT",
+      "source": "https://raw.githubusercontent.com/davidjerleke/embla-carousel/d82646603827dbd07558a2702a208a8a57866b38/LICENSE",
+      "revision": "d82646603827dbd07558a2702a208a8a57866b38",
+      "sha256": "992490064b90ec94c302fe5f29dcc14cb44145857064e46f9ffe6c8f511c1093",
+      "file": "docs/licenses/992490064b90ec94c302fe5f29dcc14cb44145857064e46f9ffe6c8f511c1093.txt"
+    },
+    {
+      "name": "embla-carousel-reactive-utils",
+      "version": "8.1.7",
+      "actualVersion": "8.1.7",
+      "declaredLicense": "MIT",
+      "source": "https://raw.githubusercontent.com/davidjerleke/embla-carousel/d82646603827dbd07558a2702a208a8a57866b38/LICENSE",
+      "revision": "d82646603827dbd07558a2702a208a8a57866b38",
+      "sha256": "992490064b90ec94c302fe5f29dcc14cb44145857064e46f9ffe6c8f511c1093",
+      "file": "docs/licenses/992490064b90ec94c302fe5f29dcc14cb44145857064e46f9ffe6c8f511c1093.txt"
+    },
+    {
+      "name": "embla-carousel",
+      "version": "8.1.7",
+      "actualVersion": "8.1.7",
+      "declaredLicense": "MIT",
+      "source": "https://raw.githubusercontent.com/davidjerleke/embla-carousel/d82646603827dbd07558a2702a208a8a57866b38/LICENSE",
+      "revision": "d82646603827dbd07558a2702a208a8a57866b38",
+      "sha256": "992490064b90ec94c302fe5f29dcc14cb44145857064e46f9ffe6c8f511c1093",
+      "file": "docs/licenses/992490064b90ec94c302fe5f29dcc14cb44145857064e46f9ffe6c8f511c1093.txt"
+    },
+    {
+      "name": "html-url-attributes",
+      "version": "3.0.0",
+      "actualVersion": "3.0.0",
+      "declaredLicense": "MIT",
+      "source": "https://raw.githubusercontent.com/rehypejs/rehype-minify/142a16cf75ea59ab9a32b1a38e02cc42cdca3f6d/license",
+      "revision": "142a16cf75ea59ab9a32b1a38e02cc42cdca3f6d",
+      "sha256": "8bcb6db133b417da60891d74be6ce583162ba9143be32ccc9e24cea7913ead14",
+      "file": "docs/licenses/8bcb6db133b417da60891d74be6ce583162ba9143be32ccc9e24cea7913ead14.txt"
+    },
+    {
+      "name": "micromark-factory-destination",
+      "version": "2.0.0",
+      "actualVersion": "2.0.0",
+      "declaredLicense": "MIT",
+      "source": "https://raw.githubusercontent.com/micromark/micromark/699185be8e0993654575e4701929c99747061348/license",
+      "revision": "699185be8e0993654575e4701929c99747061348",
+      "sha256": "536804b3adbff17dbbb9ed0d2bf9655b78f07640278581e37e3d7475282d5e61",
+      "file": "docs/licenses/536804b3adbff17dbbb9ed0d2bf9655b78f07640278581e37e3d7475282d5e61.txt"
+    },
+    {
+      "name": "micromark-factory-label",
+      "version": "2.0.0",
+      "actualVersion": "2.0.0",
+      "declaredLicense": "MIT",
+      "source": "https://raw.githubusercontent.com/micromark/micromark/f5ce6a81cff12bed28547b69264ba7cffa5ce49f/license",
+      "revision": "f5ce6a81cff12bed28547b69264ba7cffa5ce49f",
+      "sha256": "536804b3adbff17dbbb9ed0d2bf9655b78f07640278581e37e3d7475282d5e61",
+      "file": "docs/licenses/536804b3adbff17dbbb9ed0d2bf9655b78f07640278581e37e3d7475282d5e61.txt"
+    },
+    {
+      "name": "micromark-factory-space",
+      "version": "2.0.0",
+      "actualVersion": "2.0.0",
+      "declaredLicense": "MIT",
+      "source": "https://raw.githubusercontent.com/micromark/micromark/e5a68e25ea29c814669d2cfe1d70bbec3c8b3065/license",
+      "revision": "e5a68e25ea29c814669d2cfe1d70bbec3c8b3065",
+      "sha256": "536804b3adbff17dbbb9ed0d2bf9655b78f07640278581e37e3d7475282d5e61",
+      "file": "docs/licenses/536804b3adbff17dbbb9ed0d2bf9655b78f07640278581e37e3d7475282d5e61.txt"
+    },
+    {
+      "name": "micromark-factory-title",
+      "version": "2.0.0",
+      "actualVersion": "2.0.0",
+      "declaredLicense": "MIT",
+      "source": "https://raw.githubusercontent.com/micromark/micromark/c85d5bd4f006bd2969b18d962a268a95d025b6a6/license",
+      "revision": "c85d5bd4f006bd2969b18d962a268a95d025b6a6",
+      "sha256": "536804b3adbff17dbbb9ed0d2bf9655b78f07640278581e37e3d7475282d5e61",
+      "file": "docs/licenses/536804b3adbff17dbbb9ed0d2bf9655b78f07640278581e37e3d7475282d5e61.txt"
+    },
+    {
+      "name": "micromark-factory-whitespace",
+      "version": "2.0.0",
+      "actualVersion": "2.0.0",
+      "declaredLicense": "MIT",
+      "source": "https://raw.githubusercontent.com/micromark/micromark/e880e17f4655399b38e59144bfda8eb38f8a699d/license",
+      "revision": "e880e17f4655399b38e59144bfda8eb38f8a699d",
+      "sha256": "536804b3adbff17dbbb9ed0d2bf9655b78f07640278581e37e3d7475282d5e61",
+      "file": "docs/licenses/536804b3adbff17dbbb9ed0d2bf9655b78f07640278581e37e3d7475282d5e61.txt"
+    },
+    {
+      "name": "micromark-util-character",
+      "version": "2.1.0",
+      "actualVersion": "2.1.0",
+      "declaredLicense": "MIT",
+      "source": "https://raw.githubusercontent.com/micromark/micromark/8b08d16891f4d6801eb0c0e990bd7b87836c0826/license",
+      "revision": "8b08d16891f4d6801eb0c0e990bd7b87836c0826",
+      "sha256": "536804b3adbff17dbbb9ed0d2bf9655b78f07640278581e37e3d7475282d5e61",
+      "file": "docs/licenses/536804b3adbff17dbbb9ed0d2bf9655b78f07640278581e37e3d7475282d5e61.txt"
+    },
+    {
+      "name": "micromark-util-chunked",
+      "version": "2.0.0",
+      "actualVersion": "2.0.0",
+      "declaredLicense": "MIT",
+      "source": "https://raw.githubusercontent.com/micromark/micromark/ca8b52798cf361903364353b463aae526e2b0d7e/license",
+      "revision": "ca8b52798cf361903364353b463aae526e2b0d7e",
+      "sha256": "536804b3adbff17dbbb9ed0d2bf9655b78f07640278581e37e3d7475282d5e61",
+      "file": "docs/licenses/536804b3adbff17dbbb9ed0d2bf9655b78f07640278581e37e3d7475282d5e61.txt"
+    },
+    {
+      "name": "micromark-util-classify-character",
+      "version": "2.0.0",
+      "actualVersion": "2.0.0",
+      "declaredLicense": "MIT",
+      "source": "https://raw.githubusercontent.com/micromark/micromark/eb5da65ba422e7e584e7ca788222b17abc00f2dd/license",
+      "revision": "eb5da65ba422e7e584e7ca788222b17abc00f2dd",
+      "sha256": "536804b3adbff17dbbb9ed0d2bf9655b78f07640278581e37e3d7475282d5e61",
+      "file": "docs/licenses/536804b3adbff17dbbb9ed0d2bf9655b78f07640278581e37e3d7475282d5e61.txt"
+    },
+    {
+      "name": "micromark-util-combine-extensions",
+      "version": "2.0.0",
+      "actualVersion": "2.0.0",
+      "declaredLicense": "MIT",
+      "source": "https://raw.githubusercontent.com/micromark/micromark/0bf80d6b712e8e9438175f724078f523f99173ba/license",
+      "revision": "0bf80d6b712e8e9438175f724078f523f99173ba",
+      "sha256": "536804b3adbff17dbbb9ed0d2bf9655b78f07640278581e37e3d7475282d5e61",
+      "file": "docs/licenses/536804b3adbff17dbbb9ed0d2bf9655b78f07640278581e37e3d7475282d5e61.txt"
+    },
+    {
+      "name": "micromark-util-decode-numeric-character-reference",
+      "version": "2.0.1",
+      "actualVersion": "2.0.1",
+      "declaredLicense": "MIT",
+      "source": "https://raw.githubusercontent.com/micromark/micromark/929275e2ccdfc8fd54adb1e1da611020600cc951/license",
+      "revision": "929275e2ccdfc8fd54adb1e1da611020600cc951",
+      "sha256": "536804b3adbff17dbbb9ed0d2bf9655b78f07640278581e37e3d7475282d5e61",
+      "file": "docs/licenses/536804b3adbff17dbbb9ed0d2bf9655b78f07640278581e37e3d7475282d5e61.txt"
+    },
+    {
+      "name": "micromark-util-decode-string",
+      "version": "2.0.0",
+      "actualVersion": "2.0.0",
+      "declaredLicense": "MIT",
+      "source": "https://raw.githubusercontent.com/micromark/micromark/31796dbdb5b2407d546f7ff77acd2db354c5bf94/license",
+      "revision": "31796dbdb5b2407d546f7ff77acd2db354c5bf94",
+      "sha256": "536804b3adbff17dbbb9ed0d2bf9655b78f07640278581e37e3d7475282d5e61",
+      "file": "docs/licenses/536804b3adbff17dbbb9ed0d2bf9655b78f07640278581e37e3d7475282d5e61.txt"
+    },
+    {
+      "name": "micromark-util-html-tag-name",
+      "version": "2.0.0",
+      "actualVersion": "2.0.0",
+      "declaredLicense": "MIT",
+      "source": "https://raw.githubusercontent.com/micromark/micromark/bc5bba002f588c8f4495fe87ec2402d6b280ae34/license",
+      "revision": "bc5bba002f588c8f4495fe87ec2402d6b280ae34",
+      "sha256": "536804b3adbff17dbbb9ed0d2bf9655b78f07640278581e37e3d7475282d5e61",
+      "file": "docs/licenses/536804b3adbff17dbbb9ed0d2bf9655b78f07640278581e37e3d7475282d5e61.txt"
+    },
+    {
+      "name": "micromark-util-normalize-identifier",
+      "version": "2.0.0",
+      "actualVersion": "2.0.0",
+      "declaredLicense": "MIT",
+      "source": "https://raw.githubusercontent.com/micromark/micromark/4433cd9074a9260209089ceee18f1f47c1994174/license",
+      "revision": "4433cd9074a9260209089ceee18f1f47c1994174",
+      "sha256": "536804b3adbff17dbbb9ed0d2bf9655b78f07640278581e37e3d7475282d5e61",
+      "file": "docs/licenses/536804b3adbff17dbbb9ed0d2bf9655b78f07640278581e37e3d7475282d5e61.txt"
+    },
+    {
+      "name": "micromark-util-resolve-all",
+      "version": "2.0.0",
+      "actualVersion": "2.0.0",
+      "declaredLicense": "MIT",
+      "source": "https://raw.githubusercontent.com/micromark/micromark/bc2fecf084d6e922ee4bf3dd7fe54480f26728f8/license",
+      "revision": "bc2fecf084d6e922ee4bf3dd7fe54480f26728f8",
+      "sha256": "536804b3adbff17dbbb9ed0d2bf9655b78f07640278581e37e3d7475282d5e61",
+      "file": "docs/licenses/536804b3adbff17dbbb9ed0d2bf9655b78f07640278581e37e3d7475282d5e61.txt"
+    },
+    {
+      "name": "micromark-util-sanitize-uri",
+      "version": "2.0.0",
+      "actualVersion": "2.0.0",
+      "declaredLicense": "MIT",
+      "source": "https://raw.githubusercontent.com/micromark/micromark/024821772eabbac9572c22d6f1c6235b018956b9/license",
+      "revision": "024821772eabbac9572c22d6f1c6235b018956b9",
+      "sha256": "536804b3adbff17dbbb9ed0d2bf9655b78f07640278581e37e3d7475282d5e61",
+      "file": "docs/licenses/536804b3adbff17dbbb9ed0d2bf9655b78f07640278581e37e3d7475282d5e61.txt"
+    },
+    {
+      "name": "micromark",
+      "version": "4.0.0",
+      "actualVersion": "4.0.0",
+      "declaredLicense": "MIT",
+      "source": "https://raw.githubusercontent.com/micromark/micromark/18f2fa6842f964ef6a488f423c291aa06fef7999/license",
+      "revision": "18f2fa6842f964ef6a488f423c291aa06fef7999",
+      "sha256": "536804b3adbff17dbbb9ed0d2bf9655b78f07640278581e37e3d7475282d5e61",
+      "file": "docs/licenses/536804b3adbff17dbbb9ed0d2bf9655b78f07640278581e37e3d7475282d5e61.txt"
+    },
+    {
+      "name": "@edge-runtime/cookies",
+      "version": "6.0.0",
+      "actualVersion": "6.0.0",
+      "declaredLicense": "MIT",
+      "source": "https://raw.githubusercontent.com/vercel/edge-runtime/%40edge-runtime%2Fcookies%406.0.0/LICENSE.md",
+      "revision": "@edge-runtime/cookies@6.0.0",
+      "sha256": "e4f76a7a19ef2989dd79339bd3abf8afcf1d6f065e5a10c76c19415ffd727eb3",
+      "file": "docs/licenses/e4f76a7a19ef2989dd79339bd3abf8afcf1d6f065e5a10c76c19415ffd727eb3.txt"
+    },
+    {
+      "name": "next-auth",
+      "version": "4.24.15",
+      "actualVersion": "4.24.15",
+      "declaredLicense": "ISC",
+      "source": "https://raw.githubusercontent.com/nextauthjs/next-auth/next-auth%404.24.15/LICENSE",
+      "revision": "next-auth@4.24.15",
+      "sha256": "2b1f629505864a12008be8f161d20542ad5eca5be9464277fb8850820b584fd8",
+      "file": "docs/licenses/2b1f629505864a12008be8f161d20542ad5eca5be9464277fb8850820b584fd8.txt"
+    },
+    {
+      "name": "react-remove-scroll-bar",
+      "version": "2.3.8",
+      "actualVersion": "2.3.8",
+      "declaredLicense": "MIT",
+      "source": "https://raw.githubusercontent.com/theKashey/react-remove-scroll-bar/7301c160fda44cb8cf2b9fdfde61efad35736196/LICENSE",
+      "revision": "7301c160fda44cb8cf2b9fdfde61efad35736196",
+      "sha256": "a79aae0c0f21990d9d963bb3c5a79cdcea9a46f8523ba55c58d7fe776b6ebc84",
+      "file": "docs/licenses/a79aae0c0f21990d9d963bb3c5a79cdcea9a46f8523ba55c58d7fe776b6ebc84.txt",
+      "note": "Supplemental upstream author notice added in 2025; published 2.3.8 declares MIT but its npm gitHead is unavailable. Review this attribution provenance; this is not a claim that the later commit produced the installed binary."
+    },
+    {
+      "name": "@next/env",
+      "version": "15.5.28",
+      "actualVersion": "15.5.28",
+      "declaredLicense": "MIT",
+      "source": "https://raw.githubusercontent.com/vercel/next.js/v15.5.28/license.md",
+      "revision": "v15.5.28",
+      "sha256": "ee765244e2d59f5234d474f62e0766fa0c8b99af967fdd4c0cb8dcb0c76ea224",
+      "file": "docs/licenses/ee765244e2d59f5234d474f62e0766fa0c8b99af967fdd4c0cb8dcb0c76ea224.txt"
+    },
+    {
+      "name": "is-animated",
+      "version": "bundled-with-next-15.5.28",
+      "actualVersion": "2.0.2",
+      "declaredLicense": "MIT",
+      "source": "https://raw.githubusercontent.com/qzb/is-animated/df4e3ae7b79391763819f8d540c1178af5e8c893/LICENSE.md",
+      "revision": "df4e3ae7b79391763819f8d540c1178af5e8c893",
+      "sha256": "e08c030e1274fadc495c71e0489612f0c74673b69ae8e41460526c233a94a728",
+      "file": "docs/licenses/e08c030e1274fadc495c71e0489612f0c74673b69ae8e41460526c233a94a728.txt"
+    },
+    {
+      "name": "@hapi/accept",
+      "version": "bundled-with-next-15.5.28",
+      "actualVersion": "5.0.2",
+      "declaredLicense": "BSD-3-Clause",
+      "source": "https://raw.githubusercontent.com/hapijs/accept/8988ff34d147602082fa1f41b1834d952863820f/LICENSE.md",
+      "revision": "8988ff34d147602082fa1f41b1834d952863820f",
+      "sha256": "ff96bbd6a7408c166f16dbed7f2c87a8061e5a21289ec8f2d3069f8d3b15fc0a",
+      "file": "docs/licenses/ff96bbd6a7408c166f16dbed7f2c87a8061e5a21289ec8f2d3069f8d3b15fc0a.txt"
+    },
+    {
+      "name": "@mswjs/interceptors",
+      "version": "bundled-with-next-15.5.28",
+      "actualVersion": "0.23.0",
+      "declaredLicense": "MIT",
+      "source": "https://raw.githubusercontent.com/mswjs/interceptors/v0.23.0/LICENSE.md",
+      "revision": "v0.23.0",
+      "sha256": "bb3a5cb8fb224f632970e31425348f556f7a83b165d5384ea5e142575f5c412e",
+      "file": "docs/licenses/bb3a5cb8fb224f632970e31425348f556f7a83b165d5384ea5e142575f5c412e.txt"
+    },
+    {
+      "name": "edge-runtime",
+      "version": "bundled-with-next-15.5.28",
+      "actualVersion": "4.0.1",
+      "declaredLicense": "MIT",
+      "source": "https://raw.githubusercontent.com/vercel/edge-runtime/edge-runtime%404.0.1/LICENSE.md",
+      "revision": "edge-runtime@4.0.1",
+      "sha256": "e4f76a7a19ef2989dd79339bd3abf8afcf1d6f065e5a10c76c19415ffd727eb3",
+      "file": "docs/licenses/e4f76a7a19ef2989dd79339bd3abf8afcf1d6f065e5a10c76c19415ffd727eb3.txt"
+    },
+    {
+      "name": "string-hash",
+      "version": "bundled-with-next-15.5.28",
+      "actualVersion": "1.1.3",
+      "declaredLicense": "CC0-1.0",
+      "source": "https://raw.githubusercontent.com/darkskyapp/string-hash/5bf7547a91372c399f4052cc1094a93f73e10284/README.md",
+      "revision": "5bf7547a91372c399f4052cc1094a93f73e10284",
+      "sha256": "62a7a3b8dba4cc818974ab2c00cb7fb7cb20afd7d3c73ed049d7f2eb5621a46e",
+      "file": "docs/licenses/62a7a3b8dba4cc818974ab2c00cb7fb7cb20afd7d3c73ed049d7f2eb5621a46e.txt"
+    },
+    {
+      "name": "superstruct",
+      "version": "bundled-with-next-15.5.28",
+      "actualVersion": "1.0.3",
+      "declaredLicense": "MIT",
+      "source": "https://raw.githubusercontent.com/ianstormtaylor/superstruct/546dca6ba87d3442ef576c9958b435d117c4a15a/License.md",
+      "revision": "546dca6ba87d3442ef576c9958b435d117c4a15a",
+      "sha256": "0f644bc01d85e4b1958bdfe5a851704bd886404c78188d4d6fba43dc8293bc91",
+      "file": "docs/licenses/0f644bc01d85e4b1958bdfe5a851704bd886404c78188d4d6fba43dc8293bc91.txt"
+    },
+    {
+      "name": "ua-parser-js",
+      "version": "bundled-with-next-15.5.28",
+      "actualVersion": "1.0.35",
+      "declaredLicense": "MIT",
+      "source": "https://raw.githubusercontent.com/faisalman/ua-parser-js/d810feb8442eead7745a509a2dc6e397f2d8032c/license.md",
+      "revision": "d810feb8442eead7745a509a2dc6e397f2d8032c",
+      "sha256": "fb9548e36708f09ae0cc1047ebd8153928bfe5bed67e4051f0ace552bdcbf0b3",
+      "file": "docs/licenses/fb9548e36708f09ae0cc1047ebd8153928bfe5bed67e4051f0ace552bdcbf0b3.txt"
+    }
+  ],
+  "unresolved": [
+    {
+      "name": "@img/sharp-libvips-linux-x64",
+      "version": "1.3.4",
+      "actualVersion": "1.3.4",
+      "reason": "Native library bundle: the packaging repository's Apache-2.0 LICENSE covers build scripts, not all bundled libraries. Vendor licence summaries do not supply complete component copyright/licence texts, matching source or relinking material; manual scope review required."
+    },
+    {
+      "name": "@img/sharp-libvips-linuxmusl-x64",
+      "version": "1.3.4",
+      "actualVersion": "1.3.4",
+      "reason": "Native library bundle: the packaging repository's Apache-2.0 LICENSE covers build scripts, not all bundled libraries. Vendor licence summaries do not supply complete component copyright/licence texts, matching source or relinking material; manual scope review required."
+    },
+    {
+      "name": "client-only",
+      "version": "0.0.1",
+      "actualVersion": "0.0.1",
+      "reason": "No verified version-pinned upstream licence text retrieved; manual review required."
+    },
+    {
+      "name": "server-only",
+      "version": "0.0.1",
+      "actualVersion": "0.0.1",
+      "reason": "No verified version-pinned upstream licence text retrieved; manual review required."
+    }
+  ]
+}

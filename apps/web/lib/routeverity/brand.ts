@@ -1,5 +1,7 @@
 export const brand = {
   name: "RouteVerity",
+  legalName: "Multitouch Displays Ltd.",
+  contactEmail: "contact@routeverity.com",
   tagline: "Transparent click tracking.",
   description: "Marketing attribution you can verify.",
   certificationStatus: "NOT_SUBMITTED" as

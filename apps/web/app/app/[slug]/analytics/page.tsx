@@ -91,6 +91,8 @@ export default async function Analytics({
         advertising identifiers are unavailable. Bounded Google identifiers are
         fingerprinted only and visible in click detail. Conversion and revenue
         reports are separate and use event occurrence dates. All dates use UTC.
+        Cleanup permanently removes expired records from these reports and CSV
+        exports.
       </p>
       <Link className="w-fit underline" href={`/app/${slug}/conversions`}>
         Open conversion and revenue reports

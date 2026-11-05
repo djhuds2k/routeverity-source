@@ -1,5 +1,6 @@
 import { requireWorkspace } from "@/lib/routeverity/auth";
 import { brand } from "@/lib/routeverity/brand";
+import { isOperator } from "@/lib/routeverity/operators";
 import { SignOut } from "@/ui/routeverity/sign-out";
 import { WorkspaceNavigation } from "@/ui/routeverity/workspace-navigation";
 import Image from "next/image";
@@ -15,7 +16,8 @@ export default async function WorkspaceLayout({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const { workspace } = await requireWorkspace(slug);
+  const { workspace, user } = await requireWorkspace(slug);
+  const operator = await isOperator(user.id);
   return (
     <div className="min-h-screen bg-neutral-200 p-2 md:flex">
       <aside className="mb-2 flex shrink-0 md:mb-0 md:w-[304px]">
@@ -36,6 +38,11 @@ export default async function WorkspaceLayout({
           <span className="rv-muted mt-1 text-xs">Free development plan</span>
           <WorkspaceNavigation slug={slug} />
           <div className="mt-auto space-y-3 border-t border-neutral-200 pt-4">
+            {operator && (
+              <Link href="/operations" className="block text-sm">
+                Operator controls
+              </Link>
+            )}
             <Link href="/" className="block text-sm">
               RouteVerity website
             </Link>

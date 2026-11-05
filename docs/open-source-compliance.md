@@ -1,5 +1,71 @@
 # Open-source compliance preparation
 
+## E193 libultrahdr component evidence
+
+Native declaration lookup now recognises uhdr/libultrahdr. A dedicated
+[evidence index](native-license-evidence.json) binds the exact upstream2.0.2
+licence text to component/version/GNU-musl package scope, file hash and source
+revision. Generated notices retain the full original text, not an invented
+grant or SPDX choice; both native component rows reference it. Eight regression
+cases cover label preservation, missing declarations, evidence scope, tampering,
+path escape and duplicate evidence. Source export and product checks include
+the helper/tests. Existing four bundle/marker unresolved entries remain open.
+
+## E189 privacy-repair source preparation —31October2026
+
+Candidate12 includes the bounded exception logger, Next hook and mutation
+regressions and the updated modification notice. Linux production inventory and
+generated/served notices are refreshed for this new emitted graph; exact hashes
+and actual independent restoration belong in external E189 evidence. The lock,
+package versions and version-bound Next repair are unchanged. Original Dub and
+third-party notices remain preserved. Four native/marker provenance/conveyance
+warnings and qualified acceptance remain open; no legal waiver or publication.
+
+## E187 review — 2026-10-31
+
+Status: **IN_PROGRESS**; publication acceptance **BLOCKED** by unresolved
+native conveyance/marker provenance and qualified legal review. Exact-version
+metadata/tarball integrity checks establish both native bundles' declared
+LGPL-3.0-or-later and marker packages' declared MIT, without supplying the four
+missing complete notices/provenance packages. See [review and deployment
+obligations](native-licensing-review.md). Missing materials are not automatically
+an established licence violation. No obligation is waived.
+
+Candidate9 remains immutable. E187 repairs three public documentation links
+to private omitted operational records and prepares candidate10 with unchanged
+application/dependency bytes. Matching-source publication and footer activation
+still require approval and verification of an actually published release.
+
+E186 (2026-10-31): candidate9 preparation refreshes the source/lock and Linux
+inventory/notices after removing unused SAML/direct matcher dependencies and
+pinning follow-redirects1.16.2. Candidate8 remains immutable. Four attribution/
+native gaps, supplemental/legal review and publication approval remain open.
+
+E184 (2026-10-30): candidate8 preparation includes the exact pnpm Next patch,
+fixed dependency extensions, policy/generator/installed-byte checks and tests.
+Linux inventory/notices reflect this graph; Babel's targeted reader backport
+keeps its original compiled-core version explicit. Earlier candidate7 is preserved.
+Four attribution/native gaps and legal/publication clearance remain open.
+
+E182 (2026-10-30): candidate7 preparation refreshes the Ubuntu Linux inventory and
+notices for the current security/CI/public-page revision. Exact-release upstream
+retrieval leaves four explicit attribution gaps (marker packages0.0.1 and native
+GNU/musl bundles1.3.4). Qualified review, native source/relinking/conveyance and
+matching-source publication remain open. No public archive or footer URL changed.
+
+E181 (2026-10-30): the existing source download is now explicitly labelled
+historical on public/auth/dashboard footers and the transparency page. Its URL
+is unchanged and is not represented as matching the current evaluation build.
+Prepare, review and publish a new matching release before public hosting;
+historical descriptions of the earlier footer below do not waive this gate.
+
+Current P3 preparation: see the [licensing audit](licensing-audit.md),
+[machine inventory](licensing-inventory.json), [modification notice](../NOTICE.md),
+[source release](source-release.md) and [independent restoration](source-restoration.md).
+Historical counts below do not verify the new candidate. Runtime attribution/
+native-library legal questions and the old-footer/new-revision mismatch are
+explicit; no publication or legal clearance is authorized.
+
 Updated for Milestone 7, 2026-10-07. Source distributions are separate from
 production deployments. This is preparation and a release checklist, not a legal
 certification or a claim of a hosted production application.
@@ -24,8 +90,10 @@ certification or a claim of a hosted production application.
   local setup and build/run instructions. The archived upstream app,
   legacy operational/backfill scripts, Git objects, dependencies/build output,
   real environment files, keys, logs and common data-dump formats are omitted.
-- Private operator progress and the historical design-audit record are also
-  omitted from public exports; neither is required to build or run the source.
+- Private operator progress, recovery, completion/readiness/decision/evidence
+  records and the historical design audit are omitted from public exports;
+  none is required to build or run the source. Generic merchant integration and
+  attribution-design documentation remains included.
 - Safe `.env.example` and generic local Compose instructions are included
   because recipients need installation/run information. Private infrastructure
   configuration and actual local generated credentials are not included.
@@ -55,6 +123,39 @@ gate. No real environment file was copied and no live database was used for
 that build. The temporary candidate/dependencies were removed afterward;
 verification logs and its manifest were retained outside application source.
 Nothing was published.
+
+## Independent source candidate validation: 2026-10-17
+
+A new local-only 793-file candidate was restored at a short Windows path with
+Node 22.23.2 and pnpm 9.15.9 using the unchanged frozen lockfile. Its production
+build, 529 web tests plus three icon assertions, typecheck, scoped lint and
+licensing boundary pass. No live database or private environment file was used.
+The build used disposable process-only configuration and unused loopback service
+ports, as documented in [local development](local-development.md).
+
+The initial empty-environment build correctly rejected missing authentication
+configuration. The source-export integration test also exceeded the default
+five-second unit-test timeout during a full run. It now has a bounded 20-second
+subprocess deadline and 30-second test budget; all inventory/privacy assertions
+remain unchanged. The corrected complete suite passes.
+
+The candidate inventory is checked against actual source bytes, restricted paths
+and private-record/environment exclusions. Available local development secrets
+are compared in memory without printing values. Unavailable production secrets
+cannot be covered by that comparison; it is not a complete credential/provenance
+audit or final redistribution clearance. Dependency notices and actual runtime
+distribution remain release-review items.
+
+This candidate is **not published**. The existing public tag and source footer
+remain unchanged. A versioned source offer must be coordinated with an approved
+publication and matching deployed revision; independent build success alone is
+not permission to deploy or a Google-certification claim.
+
+The later 2026-10-17 merchant-attribution implementation changes source bytes.
+The earlier independently restored 793-file archive is now a historical baseline,
+not a matching current release. A refreshed byte-inventory snapshot does not
+inherit the old archive's independent restoration result; repeat that validation
+at the final approved release revision.
 
 ## Asset and modification record
 

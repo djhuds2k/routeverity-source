@@ -15,6 +15,7 @@ const inventory = JSON.parse(
 );
 const inputs = [
   "LICENSE.md",
+  "NOTICE.md",
   "README.md",
   "package.json",
   "pnpm-lock.yaml",
@@ -23,10 +24,12 @@ const inputs = [
   ".node-version",
   ".nvmrc",
   ".gitignore",
+  ".github/workflows/routeverity.yaml",
   ".cursorignore",
   "apps/web/package.json",
   "apps/web/tsconfig.json",
   "apps/web/next.config.js",
+  "apps/web/vercel.json",
   "apps/web/tailwind.config.ts",
   "apps/web/postcss.config.js",
   "apps/web/.env.example",
@@ -35,7 +38,13 @@ const inputs = [
   "apps/web/playwright.routeverity.config.ts",
   "apps/web/scripts/routeverity-redirect-audit.ts",
   "apps/web/scripts/routeverity-click-enrichment.ts",
+  "apps/web/scripts/routeverity-retention.ts",
+  "apps/web/scripts/routeverity-health.ts",
+  "apps/web/scripts/routeverity-merchant-reconciliation.ts",
   "apps/web/middleware.ts",
+  "apps/web/instrumentation.ts",
+  "apps/web/lib/axiom/axiom.ts",
+  "apps/web/lib/axiom/server.ts",
   "apps/web/app",
   "apps/web/lib/routeverity",
   "apps/web/lib/prisma",
@@ -57,10 +66,26 @@ const inputs = [
   "packages",
   "docs",
   "docker-compose.routeverity.yml",
+  "examples/merchant-reference/client.mjs",
+  "examples/merchant-reference/client.test.mjs",
   "scripts/local-routeverity.mjs",
   "scripts/check-routeverity-boundary.mjs",
   "scripts/apply-routeverity-exclusions.mjs",
   "scripts/export-routeverity-source.mjs",
+  "scripts/routeverity-build-inventory.cjs",
+  "scripts/routeverity-build-inventory.test.cjs",
+  "scripts/audit-routeverity-licenses.mjs",
+  "scripts/routeverity-native-licenses.cjs",
+  "scripts/routeverity-native-licenses.test.cjs",
+  "scripts/routeverity-shell-quote.test.cjs",
+  "scripts/fetch-routeverity-notices.mjs",
+  "scripts/routeverity-notice-fetch.test.mjs",
+  "scripts/check-routeverity-e2e.mjs",
+  "scripts/check-routeverity-e2e.test.mjs",
+  "scripts/prepare-routeverity-next-patch.mjs",
+  "scripts/check-routeverity-vendor-patch.mjs",
+  "scripts/routeverity-vendor-security.test.cjs",
+  "patches/next@15.5.28.patch",
 ];
 const excluded = inventory.exclusions.map((item) => resolve(root, item.path));
 const forbiddenNames = new Set([
@@ -78,9 +103,15 @@ function allowed(path) {
   const parts = relative(root, path).split(/[\\/]/);
   const name = parts.at(-1);
   return (
-    !["docs/progress.md", "docs/previous-routeverity-design-audit.md"].includes(
-      relative(root, path).replaceAll("\\", "/"),
-    ) &&
+    ![
+      "docs/progress.md",
+      "docs/recovery-report.md",
+      "docs/previous-routeverity-design-audit.md",
+      "docs/completion-plan.md",
+      "docs/release-readiness.md",
+      "docs/decisions-required.md",
+      "docs/verification-evidence.md",
+    ].includes(relative(root, path).replaceAll("\\", "/")) &&
     !parts.some((part) => forbiddenNames.has(part)) &&
     !excluded.some(
       (base) =>
@@ -152,7 +183,7 @@ if (!output) {
           .map((path) => relative(root, path).replaceAll("\\", "/"))
           .sort(),
         notice:
-          "Sanitized corresponding-source candidate. Review dependency notices and match the deployed revision before publishing. Private progress and design-audit records are omitted.",
+          "Sanitized corresponding-source candidate. Review dependency notices and match the deployed revision before publishing. Private operational, recovery, programme and design-audit records are omitted.",
       },
       null,
       2,

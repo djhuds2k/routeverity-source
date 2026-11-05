@@ -73,3 +73,23 @@ and identical Location across source/device/network/crawler variants.
 
 No controlled machine-load comparison or production capacity claim is made.
 The local p95 regression budget and durable target-integrity checks passed.
+
+## Post-reinstall acceptance remeasurement
+
+On 2026-10-17, the existing local production build passed all 29 browser/HTTP
+scenarios against the user-approved fresh isolated development database and
+Redis services. The unchanged durable redirect workload measured:
+
+| Measurement                      | Recovery observed result |
+| -------------------------------- | ------------------------ |
+| Samples / concurrency / warm-ups | 100 / 4 / 5              |
+| Requests per second              | 41.83                    |
+| Median                           | 63.71 ms                 |
+| p95                              | 100.96 ms                |
+| p99                              | 371.38 ms                |
+| Redirect error rate              | 0%                       |
+
+The scenario asserts exact HTTP Location, durable fixture records and p95 below
+1,000 ms. These loopback measurements are not a controlled comparison with
+earlier runs, sustained production capacity or a hosting SLA. No deployment or
+Google certification is implied.

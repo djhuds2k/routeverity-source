@@ -15,6 +15,7 @@ const mocks = vi.hoisted(() => ({
   existing: vi.fn(),
   create: vi.fn(),
   createReceipt: vi.fn(),
+  merchantReservation: vi.fn(),
 }));
 vi.mock("@/lib/prisma", () => ({
   prisma: {
@@ -73,6 +74,7 @@ beforeEach(() => {
     enabled: true,
   });
   mocks.existing.mockResolvedValue(null);
+  mocks.merchantReservation.mockResolvedValue(null);
   mocks.create.mockResolvedValue({ id: "cnv_created" });
   mocks.transaction.mockImplementation((operation) =>
     operation({
@@ -88,6 +90,7 @@ beforeEach(() => {
         findUnique: mocks.existing,
         create: mocks.create,
       },
+      routeVerityMerchantSubmission: { findUnique: mocks.merchantReservation },
     }),
   );
   vi.spyOn(console, "info").mockImplementation(() => {});
