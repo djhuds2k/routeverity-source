@@ -148,3 +148,8 @@ Modification record, 5 November 2026 (CI bootstrap): explicitly disabled pnpm
 and setup-node dependency caching for the first public Product checks run.
 The install/build/test commands, pinned action revisions and application inputs
 are unchanged. No paid cache capacity or runner is requested by this workflow.
+
+Notice consistency repair, 6 November 2026: regenerated the public notice text
+to include the existing dated source/CI modification records and this repair.
+Third-party licence texts and package/native versions are unchanged. This
+regeneration does not resolve the four recorded native/marker provenance gaps.

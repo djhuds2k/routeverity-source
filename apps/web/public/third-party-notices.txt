@@ -5214,6 +5214,24 @@ Product tests explicitly use the Node environment and omit the unused optional
 DOM peer of the test runner. The retained shell-quoting command path is tested
 for supported literal arguments and rejection of malicious object tokens.
 
+Modification record, 5 November 2026: hosting configuration now sets
+git.deploymentEnabled=false to suppress automatic Git-triggered Vercel
+deployments for this source. Explicit deployment methods and live provider
+settings remain separate controls. The install/build contract, application,
+dependencies, schema, CI workflow and third-party texts are unchanged by this
+configuration/documentation batch. No hosted acceptance, publication or new
+rights/provenance finding is represented.
+
+Modification record, 5 November 2026 (CI bootstrap): explicitly disabled pnpm
+and setup-node dependency caching for the first public Product checks run.
+The install/build/test commands, pinned action revisions and application inputs
+are unchanged. No paid cache capacity or runner is requested by this workflow.
+
+Notice consistency repair, 6 November 2026: regenerated the public notice text
+to include the existing dated source/CI modification records and this repair.
+Third-party licence texts and package/native versions are unchanged. This
+regeneration does not resolve the four recorded native/marker provenance gaps.
+
 
 
 ===== edge-runtime@bundled-with-next-15.5.28 (MIT) =====

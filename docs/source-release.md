@@ -1,5 +1,22 @@
 # Preparing the P3 corresponding-source release
 
+## Candidate18 notice consistency — 6 November 2026
+
+Candidate18 synchronizes the generated public notices with the dated root
+modification record. Licence texts/package/native versions, application,
+dependencies, schema, Git suppression and no-cache workflow remain unchanged.
+It preserves the actual Candidate17 local Linux build,726unit/contract tests,
+compiled privacy probes and41browser/HTTP passes for identical runtime inputs;
+it does not represent a new full Candidate18 build or another browser run.
+Regenerated-versus-frozen and served notice bytes are checked separately against
+the repaired source package. Exact hashes/results remain outside its ZIP.
+
+The first isolated browser attempt failed due to a test-harness line-ending
+fault; a clean corrected run passed all41tests without skips/flakes. No hosted
+Vercel acceptance or legal/provenance clearance follows from those local tests.
+Earlier candidates and the existing published Candidate17 source are preserved.
+Candidate18 requires its own matching-source publication before deployment.
+
 ## Candidate17 public CI bootstrap — 5 November 2026
 
 Candidate17 preserves Candidate16's Git deployment suppression and explicitly
